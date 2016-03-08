@@ -19,6 +19,7 @@ Here is a short example, it registers a request handler at path hello which hand
 The framework supports path parameters, so that http://mydomain.local/myapp/orders/123 will be routed to this parametrized request handler:
 
        &Path('orders/{orderId}')
+       &Produces('text/html');       
        GET
         (procedure(Request: TRequest; Response: TResponse)
          begin
@@ -26,3 +27,34 @@ The framework supports path parameters, so that http://mydomain.local/myapp/orde
              Format('<html>Thank you for your order %s</html>',
                [Request.Params.Values['orderId']]);
          end);         
+
+### Multiple Resource Representations
+
+If a resource has more than one representation (HTML, XML or JSON), this can be handled using the same Path value but different MIME type Produces attributes:
+
+       // respond to HTML browsers
+       &Path('myresource');
+       &Produces('text/html');
+       GET(procedure(Request: TRequest; Response: TResponse)
+           begin
+             Response.ContentText :=
+               '<html>Hello world!</html>';
+           end);
+        
+       // respond to XML client
+       &Path('myresource');
+       &Produces('application/xml');
+       GET(procedure(Request: TRequest; Response: TResponse)
+           begin
+             Response.ContentText := '<xml>Hello world!</xml>';
+             Response.CharSet := 'utf-8';
+       end);
+        
+       // respond to JSON client
+       &Path('myresource');
+       &Produces('application/json');
+       GET(procedure(Request: TRequest; Response: TResponse)
+           begin
+             Response.ContentText := '{"msg":"Hello world!"}';
+             Response.CharSet := 'utf-8';
+       end);
