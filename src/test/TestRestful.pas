@@ -29,11 +29,15 @@ unit TestRestful;
 interface
 
 uses
-  {$IFDEF FPC}fpcunit,testregistry{$ELSE}TestFramework{$ENDIF};
+  {$IFDEF FPC}fpcunit,testregistry{$ELSE}TestFramework{$ENDIF},
+  rsGlobal;
 
 type
+  { TRestfulTests }
+
   TRestfulTests = class(TTestCase)
   private
+    procedure MyTestProc(Request: TRequest; Response: TResponse);
 
   published
     procedure TestGET;
@@ -53,7 +57,7 @@ implementation
 
 uses
   rsConfiguration, rsRoute, rsRouteCriteria, rsRouteMappings,
-  rsGlobal, rsInterfaces,
+  rsInterfaces,
   djRestfulComponent, djInterfaces, djServer, djWebAppContext,
   IdHTTP, Classes;
 
@@ -263,9 +267,19 @@ procedure TRestfulTests.TestTrsRoute;
 var
   Route: IRoute;
 begin
-  // Route := TrsRoute.Create('path', procedure(Req: TRequest; Res: TResponse) begin end);
+  Route := TrsRoute.Create('path',
+  {$IFDEF FPC}
+  MyTestProc);
+  {$ELSE}
+  procedure(Req: TRequest; Res: TResponse) begin end);
+  {$ENDIF}
 
-  // CheckEquals('path', Route.Path);
+  CheckEquals('path', Route.Path);
+end;
+
+procedure TRestfulTests.MyTestProc(Request: TRequest; Response: TResponse);
+begin
+
 end;
 
 procedure TRestfulTests.TestTrsRouteCriteria;
@@ -292,14 +306,26 @@ end;
 
 procedure TRestfulTests.TestTrsRouteMappings;
 var
-  RM: IRouteMappings;
+  RM: TrsRouteMappings;
   RC: IRouteCriteria;
+  Route: TRsRoute;
 begin
   RM := TrsRouteMappings.Create;
 
   RC := TrsRouteCriteria.Create('path', 'consumes', 'produces');
 
   CheckFalse(RM.ContainsKey(RC));
+
+  Route := TrsRoute.Create('path',
+  {$IFDEF FPC}
+  MyTestProc);
+  {$ELSE}
+  procedure(Req: TRequest; Res: TResponse) begin end);
+  {$ENDIF}
+
+  RM.Add(RC, Route);
+
+  CheckTrue(RM.ContainsKey(RC));
 
 end;
 

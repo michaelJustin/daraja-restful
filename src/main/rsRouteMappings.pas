@@ -53,7 +53,7 @@ type
    *)
   TrsRouteMappings = class(TInterfacedObject, IRouteMappings)
   private
-    FRouteCriteriaList: TInterfaceList;
+    FRouteCriteriaList: IInterfaceList;
     FRouteList: TObjectList;
   public
     constructor Create; overload;
@@ -97,12 +97,15 @@ end;
 
 destructor TrsRouteMappings.Destroy;
 begin
-  FRouteCriteriaList.Free;
+  // FRouteCriteriaList.Free;
   FRouteList.Free;
 end;
 
 procedure TrsRouteMappings.Add(const ACriteria: IRouteCriteria; const ARoute: TrsRoute);
 begin
+  Assert(Assigned(FRouteCriteriaList));
+  Assert(Assigned(ACriteria));
+
   FRouteCriteriaList.Add(ACriteria);
   FRouteList.Add(ARoute);
 end;

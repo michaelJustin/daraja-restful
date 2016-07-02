@@ -42,20 +42,9 @@ uses
 {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLogOverSimpleLogger, SimpleLogger,
 {$ENDIF}
-  Forms,
-  Interfaces,
-  djRestfulComponent in '..\main\djRestfulComponent.pas',
-  rsConfiguration in '..\main\rsConfiguration.pas',
-  rsGlobal in '..\main\rsGlobal.pas',
-  rsInterfaces in '..\main\rsInterfaces.pas',
-  rsRoute in '..\main\rsRoute.pas',
-  rsRouteCriteria in '..\main\rsRouteCriteria.pas',
-  rsRouteMappings in '..\main\rsRouteMappings.pas',
-  TestRestful in 'TestRestful.pas',
-  testregistry,
-  fpcunit,
-  GuiTestRunner,
-  consoletestrunner;
+  Forms, Interfaces, djRestfulComponent, rsConfiguration, rsGlobal,
+  rsInterfaces, rsRoute, rsRouteCriteria, rsRouteMappings, TestRestful,
+  testregistry, fpcunit, GuiTestRunner, consoletestrunner;
 
 {$R *.res}
 
