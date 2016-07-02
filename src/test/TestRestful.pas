@@ -42,14 +42,16 @@ type
     // Test the OPTIONS HTTP method
     procedure TestOPTIONS;
 
-    procedure TestRoute;
+    procedure TestTrsRoute;
 
+    procedure TestTrsRouteCriteria;
   end;
 
 implementation
 
 uses
-  rsConfiguration, rsRoute, rsGlobal, rsInterfaces,
+  rsConfiguration, rsRoute, rsRouteCriteria, rsRouteMappings,
+  rsGlobal, rsInterfaces,
   djRestfulComponent, djInterfaces, djServer, djWebAppContext,
   IdHTTP, Classes;
 
@@ -166,13 +168,33 @@ begin
   end;
 end;
 
-procedure TRestfulTests.TestRoute;
+procedure TRestfulTests.TestTrsRoute;
 var
   Route: IRoute;
 begin
   Route := TrsRoute.Create('path', procedure(Req: TRequest; Res: TResponse) begin end);
 
   CheckEquals('path', Route.Path);
+end;
+
+procedure TRestfulTests.TestTrsRouteCriteria;
+var
+  RC: IRouteCriteria;
+begin
+  RC := TrsRouteCriteria.Create('path', 'consumes', 'produces');
+
+  CheckEquals('path', RC.NormalizedPath);
+  CheckEquals('path', RC.Path);
+  CheckEquals('consumes', RC.Consumes);
+  CheckEquals('produces', RC.Produces);
+
+
+  RC := TrsRouteCriteria.Create('{param1}/{param2}', 'consumes', 'produces');
+
+  CheckEquals('{p}/{p}/', RC.NormalizedPath);
+  CheckEquals('{param1}/{param2}', RC.Path);
+  CheckEquals('consumes', RC.Consumes);
+  CheckEquals('produces', RC.Produces);
 end;
 
 end.
