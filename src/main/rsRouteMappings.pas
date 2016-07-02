@@ -35,7 +35,7 @@ unit rsRouteMappings;
 interface
 
 uses
-  rsRoute, rsRouteCriteria,
+  rsInterfaces, rsRoute, rsRouteCriteria,
   {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
   {$ENDIF DARAJA_LOGGING}
@@ -46,9 +46,16 @@ type
   (**
    * Route mappings.
    *)
-  TrsRouteMappings = class(TObjectDictionary<TrsRouteCriteria, TrsRoute>)
+  TrsRouteMappings = class(TInterfacedObject, IRouteMappings)
+  private
+    FMappings: TObjectDictionary<TrsRouteCriteria, TrsRoute>;
   public
     constructor Create; overload;
+    destructor Destroy; override;
+
+    procedure Add(Criteria: TrsRouteCriteria; Route: TrsRoute);
+
+    function ContainsKey(Criteria: TrsRouteCriteria): Boolean;
 
     function FindMatch(C: TrsRouteCriteria; var Route: TrsRoute): TrsRouteCriteria;
   end;
@@ -59,9 +66,26 @@ implementation
 
 { TrsRouteMappings }
 
+procedure TrsRouteMappings.Add(Criteria: TrsRouteCriteria; Route: TrsRoute);
+begin
+  FMappings.Add(Criteria, Route);
+end;
+
+function TrsRouteMappings.ContainsKey(Criteria: TrsRouteCriteria): Boolean;
+begin
+  Result := FMappings.ContainsKey(Criteria);
+end;
+
 constructor TrsRouteMappings.Create;
 begin
-  inherited Create([doOwnsKeys, doOwnsValues], TrsCriteriaComparer.Create);
+  inherited ;
+
+  FMappings := TObjectDictionary<TrsRouteCriteria, TrsRoute>.Create([doOwnsKeys, doOwnsValues], TrsCriteriaComparer.Create);
+end;
+
+destructor TrsRouteMappings.Destroy;
+begin
+  FMappings.Free;
 end;
 
 function TrsRouteMappings.FindMatch(C: TrsRouteCriteria;
@@ -71,12 +95,12 @@ var
 begin
   Route := nil;
   Result := nil;
-  for MatchingRC in Keys do
+  for MatchingRC in FMappings.Keys do
   begin
     // Log(Format('Comparing %s %s', [C.Path + C.Produces, MatchingRC.Path + MatchingRC.Produces]));
     if TrsRouteCriteria.Matches(MatchingRC, C) then
     begin
-      Route := Self[MatchingRC];
+      Route := FMappings[MatchingRC];
       Result := MatchingRC;
       Break;
     end;

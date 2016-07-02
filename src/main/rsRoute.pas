@@ -50,11 +50,12 @@ type
     FPath: string;
     FHandler: TRouteProc;
     function GetPath: string;
+    function GetHandler: TRouteProc;
   public
     constructor Create(Path: string; Handler: TRouteProc);
 
     property Path: string read GetPath;
-    property Handler: TRouteProc read FHandler;
+    property Handler: TRouteProc read GetHandler;
   end;
 
 implementation
@@ -65,6 +66,11 @@ constructor TrsRoute.Create(Path: string; Handler: TRouteProc);
 begin
   FPath := Path;
   FHandler := Handler;
+end;
+
+function TrsRoute.GetHandler: TRouteProc;
+begin
+  Result := FHandler;
 end;
 
 function TrsRoute.GetPath: string;

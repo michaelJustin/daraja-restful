@@ -32,6 +32,9 @@ unit rsInterfaces;
 
 interface
 
+uses
+  rsGlobal;
+
 type
   IContextConfiguration = interface
     ['{8D12A5C0-4C91-4A9E-BB14-3030CAFC8286}']
@@ -41,8 +44,10 @@ type
     ['{7543E346-D614-45B9-97A0-84855F1889D0}']
 
     function GetPath: string;
+    function GetHandler: TRouteProc;
+
     property Path: string read GetPath;
-    // property Handler: TRouteProc read FHandler;
+    property Handler: TRouteProc read GetHandler;
   end;
 
   IRouteCriteria = interface
@@ -58,6 +63,13 @@ type
     property Produces: string read GetProduces;
     property Consumes: string read GetConsumes;
   end;
+
+  IRouteMappings = interface
+    ['{0579F025-A69E-4104-BED9-0D5ED1F43523}']
+
+    // function ContainsKey(Criteria: IRouteCriteria): Boolean;
+  end;
+
 implementation
 
 end.
