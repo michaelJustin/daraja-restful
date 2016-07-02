@@ -40,7 +40,7 @@ uses
   djLogAPI, djLoggerFactory,
   {$ENDIF DARAJA_LOGGING}
   {$IFDEF FPC}fgl{$ELSE}Generics.Collections{$ENDIF},
-  SysUtils;
+  SysUtils, Classes;
 
 type
   (**
@@ -60,7 +60,22 @@ type
     function FindMatch(C: TrsRouteCriteria; var Route: TrsRoute): TrsRouteCriteria;
   end;
 
-  TrsMethodMappings = TObjectDictionary<string, TrsRouteMappings>;
+  TrsMethodMappings = class(TInterfacedObject, IMethodMappings)
+  private
+    FMappings: TObjectDictionary<string, TrsRouteMappings>;
+  public
+    constructor Create; overload;
+    destructor Destroy; override;
+
+    procedure Add(Key: string; Value: TrsRouteMappings);
+
+    function ContainsKey(Key: string): Boolean;
+
+    function Methods: TStrings;
+
+    function Mapping(Index: string): TrsRouteMappings;
+
+  end;
 
 implementation
 
@@ -105,6 +120,45 @@ begin
       Break;
     end;
   end;
+end;
+
+{ TrsMethodMappings }
+
+procedure TrsMethodMappings.Add(Key: string; Value: TrsRouteMappings);
+begin
+  FMappings.Add(Key, Value);
+end;
+
+function TrsMethodMappings.ContainsKey(Key: string): Boolean;
+begin
+  Result := FMappings.ContainsKey(Key);
+end;
+
+constructor TrsMethodMappings.Create;
+begin
+  inherited Create();
+
+  FMappings := TObjectDictionary<string, TrsRouteMappings>.Create([doOwnsValues]);
+end;
+
+destructor TrsMethodMappings.Destroy;
+begin
+  FMappings.Free;
+
+  inherited;
+end;
+
+function TrsMethodMappings.Mapping(Index: string): TrsRouteMappings;
+begin
+  Result := FMappings.Items[Index];
+end;
+
+function TrsMethodMappings.Methods: TStrings;
+var
+  S: string;
+begin
+  Result := TStringList.Create;
+  for S in FMappings.Keys do Result.Add(S);
 end;
 
 end.

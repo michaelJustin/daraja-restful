@@ -102,8 +102,10 @@ type
 
   end;
 
-
 implementation
+
+uses
+  Classes;
 
 procedure Log(Msg: string);
 begin
@@ -126,7 +128,7 @@ begin
 
   Trace('Initializing');
 
-  Mappings := TrsMethodMappings.Create([doOwnsValues]);
+  Mappings := TrsMethodMappings.Create;
 
   Mappings.Add('GET', TrsRouteMappings.Create);
   Mappings.Add('POST', TrsRouteMappings.Create);
@@ -180,19 +182,27 @@ end;
 
 function TrsConfiguration.HasMatch(Criteria: TrsRouteCriteria): Boolean;
 var
+  Methods: TStrings;
+  Method: string;
   RM: TrsRouteMappings;
   R: TrsRoute;
 begin
-  for RM in Mappings.Values do
-  begin
-    RM.FindMatch(Criteria, R);
-    if Assigned(R) then
+  Methods := Mappings.Methods;
+  try
+    for Method in Methods do
     begin
-      Trace('Found a handler for ' + Criteria.Path);  // TODO log handler method
-      Exit(True)
+      RM := Mappings.Mapping(Method);
+      RM.FindMatch(Criteria, R);
+      if Assigned(R) then
+      begin
+        Trace('Found a handler for ' + Criteria.Path);  // TODO log handler method
+        Exit(True)
+      end;
     end;
+    Result := False;
+  finally
+    Methods.Free;
   end;
-  Result := False;
 end;
 
 function TrsConfiguration.MethodMappings(Method: string): TrsRouteMappings;
@@ -202,7 +212,7 @@ begin
     raise Exception.CreateFmt('Unknown method "%s"', [Method]);
   end;
 
-  Result := Mappings[Method];
+  Result := Mappings.Mapping(Method);
 end;
 
 procedure TrsConfiguration.SetPath(const APath: string);

@@ -70,6 +70,10 @@ type
     // function ContainsKey(Criteria: IRouteCriteria): Boolean;
   end;
 
+  IMethodMappings = interface
+    ['{1F68D9B7-7A58-4F72-9DD7-D1B2767A16C1}']
+  end;
+
 implementation
 
 end.
