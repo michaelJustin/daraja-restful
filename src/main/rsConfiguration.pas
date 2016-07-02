@@ -83,7 +83,7 @@ type
 
     function MethodMappings(Method: string): TrsRouteMappings;
 
-    function HasMatch(Criteria: TrsRouteCriteria): Boolean;
+    function HasMatch(const Criteria: IRouteCriteria): Boolean;
 
     procedure ClearNextPath;
 
@@ -180,7 +180,7 @@ begin
   {$ENDIF DARAJA_LOGGING}
 end;
 
-function TrsConfiguration.HasMatch(Criteria: TrsRouteCriteria): Boolean;
+function TrsConfiguration.HasMatch(const Criteria: IRouteCriteria): Boolean;
 var
   Methods: TStrings;
   Method: string;
