@@ -49,6 +49,8 @@ type
   TrsRouteMappings = class(TInterfacedObject, IRouteMappings)
   private
     FMappings: TObjectDictionary<TrsRouteCriteria, TrsRoute>;
+    // FRouteCriteriaList: IInterfaceList;
+    // FRouteList: TObjectList;
   public
     constructor Create; overload;
     destructor Destroy; override;
@@ -62,7 +64,7 @@ type
 
   TrsMethodMappings = class(TInterfacedObject, IMethodMappings)
   private
-    FMappings: TObjectDictionary<string, TrsRouteMappings>;
+    FMappings: TStrings;
   public
     constructor Create; overload;
     destructor Destroy; override;
@@ -93,7 +95,7 @@ end;
 
 constructor TrsRouteMappings.Create;
 begin
-  inherited ;
+  inherited;
 
   FMappings := TObjectDictionary<TrsRouteCriteria, TrsRoute>.Create([doOwnsKeys, doOwnsValues], TrsCriteriaComparer.Create);
 end;
@@ -126,23 +128,27 @@ end;
 
 procedure TrsMethodMappings.Add(Key: string; Value: TrsRouteMappings);
 begin
-  FMappings.Add(Key, Value);
+  FMappings.AddObject(Key, Value);
 end;
 
 function TrsMethodMappings.ContainsKey(Key: string): Boolean;
 begin
-  Result := FMappings.ContainsKey(Key);
+  Result := FMappings.IndexOf(Key) > -1;
 end;
 
 constructor TrsMethodMappings.Create;
 begin
-  inherited Create();
+  inherited;
 
-  FMappings := TObjectDictionary<string, TrsRouteMappings>.Create([doOwnsValues]);
+  FMappings := TStringList.Create;
 end;
 
 destructor TrsMethodMappings.Destroy;
+var
+  I: Integer;
 begin
+  for I := 0 to FMappings.Count - 1 do FMappings.Objects[I].Free;
+
   FMappings.Free;
 
   inherited;
@@ -150,15 +156,12 @@ end;
 
 function TrsMethodMappings.Mapping(Index: string): TrsRouteMappings;
 begin
-  Result := FMappings.Items[Index];
+  Result := FMappings.Objects[FMappings.IndexOf(Index)] as TrsRouteMappings;
 end;
 
 function TrsMethodMappings.Methods: TStrings;
-var
-  S: string;
 begin
-  Result := TStringList.Create;
-  for S in FMappings.Keys do Result.Add(S);
+  Result := FMappings;
 end;
 
 end.

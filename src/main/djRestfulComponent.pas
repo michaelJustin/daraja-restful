@@ -36,6 +36,7 @@ interface
 
 uses
   rsRoute, rsRouteMappings, rsConfiguration, rsRouteCriteria, rsGlobal,
+  rsInterfaces,
   djWebComponent, djServerContext, djInterfaces,
 {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,

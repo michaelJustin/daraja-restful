@@ -201,7 +201,7 @@ begin
     end;
     Result := False;
   finally
-    Methods.Free;
+    // Methods.Free; will be freed by owner
   end;
 end;
 
