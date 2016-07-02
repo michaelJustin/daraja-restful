@@ -35,6 +35,7 @@ unit rsRouteCriteria;
 interface
 
 uses
+  rsInterfaces,
   {$IFDEF FPC}fgl{$ELSE}Generics.Defaults{$ENDIF},
   Classes;
 
@@ -42,7 +43,7 @@ type
   (**
    * Route criteria.
    *)
-  TrsRouteCriteria = class
+  TrsRouteCriteria = class(TInterfacedObject, IRouteCriteria)
   public
     Path: string;
     Produces: string;

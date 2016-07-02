@@ -45,6 +45,12 @@ type
     // property Handler: TRouteProc read FHandler;
   end;
 
+  IRouteCriteria = interface
+    ['{4BC918E8-D0D5-4997-B1A0-DD1104E4046F}']
+
+    function NormalizedPath: string;
+
+  end;
 implementation
 
 end.
