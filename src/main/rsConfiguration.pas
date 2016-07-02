@@ -184,24 +184,21 @@ var
   Methods: TStrings;
   Method: string;
   RouteMappings: TrsRouteMappings;
-  R: TrsRoute;
+  MatchResult: TMatchResult;
 begin
   Methods := Mappings.Methods;
-  try
-    for Method in Methods do
+
+  for Method in Methods do
+  begin
+    RouteMappings := Mappings.Mapping(Method);
+    MatchResult := RouteMappings.FindMatch(ACriteria);
+    if Assigned(MatchResult.Route) then
     begin
-      RouteMappings := Mappings.Mapping(Method);
-      RouteMappings.FindMatch(ACriteria, R);
-      if Assigned(R) then
-      begin
-        Trace('Found a handler for ' + ACriteria.Path);  // TODO log handler method
-        Exit(True);
-      end;
+      Trace('Found a handler for ' + ACriteria.Path);  // TODO log handler method
+      Exit(True);
     end;
-    Result := False;
-  finally
-    // Methods.Free; will be freed by owner
   end;
+  Result := False;
 end;
 
 function TrsConfiguration.MethodMappings(const AMethod: string): TrsRouteMappings;

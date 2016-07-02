@@ -35,7 +35,7 @@ unit rsRouteMappings;
 interface
 
 uses
-  rsInterfaces, rsRoute, rsRouteCriteria,
+  rsInterfaces, rsRoute, rsRouteCriteria, rsGlobal,
   {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
   {$ENDIF DARAJA_LOGGING}
@@ -43,6 +43,11 @@ uses
   SysUtils, Classes;
 
 type
+  TMatchResult = record
+    RouteCriteria: IRouteCriteria;
+    Route: TrsRoute;
+  end;
+
   (**
    * Route mappings.
    *)
@@ -58,7 +63,7 @@ type
 
     function ContainsKey(const ACriteria: IRouteCriteria): Boolean;
 
-    function FindMatch(const ACriteria: IRouteCriteria; var Route: TrsRoute): IRouteCriteria;
+    function FindMatch(const ACriteria: IRouteCriteria): TMatchResult;
   end;
 
   TrsMethodMappings = class(TInterfacedObject, IMethodMappings)
@@ -107,22 +112,22 @@ begin
   Result := FRouteCriteriaList.IndexOf(ACriteria) > -1;
 end;
 
-function TrsRouteMappings.FindMatch(const ACriteria: IRouteCriteria;
-  var Route: TrsRoute): IRouteCriteria;
+function TrsRouteMappings.FindMatch(const ACriteria: IRouteCriteria): TMatchResult;
 var
   MatchingRC: IRouteCriteria;
   I: Integer;
 begin
-  Route := nil;
-  Result := nil;
+  Result := Default(TMatchResult);
+  Result.RouteCriteria := nil;
+  Result.Route := nil;
   for I := 0 to FRouteCriteriaList.Count - 1 do
   begin
     MatchingRC := FRouteCriteriaList[I] as IRouteCriteria;
     // Log(Format('Comparing %s %s', [C.Path + C.Produces, MatchingRC.Path + MatchingRC.Produces]));
     if TrsRouteCriteria.Matches(MatchingRC, ACriteria) then
     begin
-      Route := FRouteList[I] as TrsRoute;
-      Result := MatchingRC;
+      Result.Route := FRouteList[I] as TrsRoute;
+      Result.RouteCriteria := MatchingRC;
       Break;
     end;
   end;

@@ -37,6 +37,8 @@ uses
   Classes;
 
 type
+
+
   IContextConfiguration = interface
     ['{8D12A5C0-4C91-4A9E-BB14-3030CAFC8286}']
   end;
@@ -79,6 +81,8 @@ type
     function Methods: TStrings;
 
   end;
+
+
 
 implementation
 

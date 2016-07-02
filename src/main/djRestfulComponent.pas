@@ -269,10 +269,9 @@ end;
 procedure TdjRestfulComponent.Service(Context: TdjServerContext;
   Request: TIdHTTPRequestInfo; Response: TIdHTTPResponseInfo);
 var
-  Route: TrsRoute;
   RouteMappings: TrsRouteMappings;
   RequestRC: IRouteCriteria;
-  MatchingRC: IRouteCriteria;
+  MatchResult: TMatchResult;
   RequestPath: string;
 begin
   if ContextPath <> '' then
@@ -289,35 +288,31 @@ begin
   // find a route which consumes the incoming content type
   // and produces the requested content tpye
   RequestRC := TrsRouteCriteria.Create(RequestPath, Request.ContentType, Request.Accept);
-  try
-    // find the route
-    RouteMappings := RestConfig.MethodMappings(Request.Command);
-    MatchingRC := RouteMappings.FindMatch(RequestRC, Route);
 
-    // either way (if Route is nil, return error message)
-    if Assigned(Route) then
+  // find the route
+  RouteMappings := RestConfig.MethodMappings(Request.Command);
+  MatchResult := RouteMappings.FindMatch(RequestRC);
+
+  // either way (if Route is nil, return error message)
+  if Assigned(MatchResult.Route) then
+  begin
+    DoCommand(RequestPath, MatchResult.RouteCriteria, MatchResult.Route, Request, Response);
+  end
+  else
+  begin
+    if RestConfig.HasMatch(RequestRC) then
     begin
-      DoCommand(RequestPath, MatchingRC, Route, Request, Response);
+      // there is a different handler registered, but not for this method:
+      // Send a '405 Method not allowed'
+      SendError(Response, 405,
+        Format('This resource does not support "%s" requests',
+        [Request.Command]));
     end
     else
     begin
-      if RestConfig.HasMatch(RequestRC) then
-      begin
-        // there is a different handler registered, but not for this method:
-        // Send a '405 Method not allowed'
-        SendError(Response, 405,
-          Format('This resource does not support "%s" requests',
-          [Request.Command]));
-      end
-      else
-      begin
-        // Send a '404 Document not found'
-        SendError(Response, 404);
-      end;
+      // Send a '404 Document not found'
+      SendError(Response, 404);
     end;
-
-  finally
-    // RequestRC.Free;
   end;
 end;
 
