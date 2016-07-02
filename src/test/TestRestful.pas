@@ -47,7 +47,7 @@ implementation
 
 uses
   djRestfulComponent, djInterfaces, djServer, djWebAppContext,
-  rsConfiguration, rsRoute,
+  rsConfiguration, rsRoute, rsGlobal,
   IdHTTP, Classes;
 
 type

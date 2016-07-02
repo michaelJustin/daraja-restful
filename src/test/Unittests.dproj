@@ -46,6 +46,7 @@
 			<DCCReference Include="..\main\rsRouteMappings.pas"/>
 			<DCCReference Include="TestRestful.pas"/>
 			<DCCReference Include="..\main\rsInterfaces.pas"/>
+			<DCCReference Include="..\main\rsGlobal.pas"/>
 			<BuildConfiguration Include="Base">
 				<Key>Base</Key>
 			</BuildConfiguration>

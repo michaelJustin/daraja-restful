@@ -35,7 +35,7 @@ unit djRestfulComponent;
 interface
 
 uses
-  rsRoute, rsRouteMappings, rsConfiguration, rsRouteCriteria,
+  rsRoute, rsRouteMappings, rsConfiguration, rsRouteCriteria, rsGlobal,
   djWebComponent, djServerContext, djInterfaces,
 {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
