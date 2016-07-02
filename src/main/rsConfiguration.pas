@@ -39,7 +39,6 @@ uses
   {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
   {$ENDIF DARAJA_LOGGING}
-  {$IFDEF FPC}fgl{$ELSE}Generics.Collections, Generics.Defaults{$ENDIF},
   SysUtils;
 
 type
