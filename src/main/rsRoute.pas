@@ -35,6 +35,7 @@ unit rsRoute;
 interface
 
 uses
+  rsInterfaces,
   {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
   {$ENDIF DARAJA_LOGGING}
@@ -51,14 +52,15 @@ type
   (**
    * Route.
    *)
-  TrsRoute = class
+  TrsRoute = class(TInterfacedObject, IRoute)
   private
     FPath: string;
     FHandler: TRouteProc;
+    function GetPath: string;
   public
     constructor Create(Path: string; Handler: TRouteProc);
 
-    property Path: string read FPath;
+    property Path: string read GetPath;
     property Handler: TRouteProc read FHandler;
   end;
 
@@ -70,6 +72,11 @@ constructor TrsRoute.Create(Path: string; Handler: TRouteProc);
 begin
   FPath := Path;
   FHandler := Handler;
+end;
+
+function TrsRoute.GetPath: string;
+begin
+  Result := FPath;
 end;
 
 end.

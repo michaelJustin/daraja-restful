@@ -37,6 +37,14 @@ type
     ['{8D12A5C0-4C91-4A9E-BB14-3030CAFC8286}']
   end;
 
+  IRoute = interface
+    ['{7543E346-D614-45B9-97A0-84855F1889D0}']
+
+    function GetPath: string;
+    property Path: string read GetPath;
+    // property Handler: TRouteProc read FHandler;
+  end;
+
 implementation
 
 end.
