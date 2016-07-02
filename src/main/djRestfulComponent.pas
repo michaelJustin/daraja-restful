@@ -1,4 +1,4 @@
-(*
+﻿(*
 
     Daraja Framework
     Copyright (C) 2016  Michael Justin
@@ -35,7 +35,8 @@ unit djRestfulComponent;
 interface
 
 uses
-  rsRoute, rsRouteMappings, rsConfiguration, rsRouteCriteria,
+  rsRoute, rsRouteMappings, rsConfiguration, rsRouteCriteria, rsGlobal,
+  rsInterfaces,
   djWebComponent, djServerContext, djInterfaces,
 {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
@@ -70,11 +71,12 @@ type
     procedure SendError(AResponseInfo: TIdHTTPResponseInfo; Error:
       Integer; ErrorMessage: string = '');
 
-    procedure AddPathParams(const RequestPath: string; const Route:
-      TrsRoute; const ARequestInfo: TIdHTTPRequestInfo);
+    procedure AddPathParams(const RequestPath: string;
+      const Route: IRoute; const ARequestInfo: TIdHTTPRequestInfo);
 
     procedure DoCommand(const RequestPath: string;
-      const MatchingRC: TrsRouteCriteria; const Route: TrsRoute;
+      const MatchingRC: IRouteCriteria;
+      const Route: IRoute;
       const ARequestInfo: TIdHTTPRequestInfo;
       const AResponseInfo: TIdHTTPResponseInfo);
 
@@ -209,7 +211,7 @@ begin
 end;
 
 procedure TdjRestfulComponent.AddPathParams(const RequestPath: string; const
-  Route: TrsRoute; const ARequestInfo: TIdHTTPRequestInfo);
+  Route: IRoute; const ARequestInfo: TIdHTTPRequestInfo);
 var
   S: string;
   Temp: string;
@@ -220,7 +222,7 @@ begin
 
   SL := TStringList.Create;
   try
-    TrsCriteriaComparer.PathParams(Route.Path, RequestPath, SL);
+    TrsRouteCriteria.PathParams(Route.Path, RequestPath, SL);
 
     for S in SL do
     begin
@@ -236,10 +238,12 @@ end;
 
 procedure TdjRestfulComponent.DoCommand(
   const RequestPath: string;
-  const MatchingRC: TrsRouteCriteria;
-  const Route: TrsRoute;
+  const MatchingRC: IRouteCriteria;
+  const Route: IRoute;
   const ARequestInfo: TIdHTTPRequestInfo;
   const AResponseInfo: TIdHTTPResponseInfo);
+var
+  RP: TRouteProc;
 begin
   // check and set path parameters
   AddPathParams(RequestPath, Route, ARequestInfo);
@@ -250,9 +254,11 @@ begin
     AResponseInfo.ContentType := MatchingRC.Produces;
   end;
 
+  RP := Route.Handler;
+
   // invoke TRouteProc
   try
-    Route.Handler.Invoke(ARequestInfo, AResponseInfo);
+    RP(ARequestInfo, AResponseInfo);
   except
     on E: Exception do
     begin
@@ -267,10 +273,9 @@ end;
 procedure TdjRestfulComponent.Service(Context: TdjServerContext;
   Request: TIdHTTPRequestInfo; Response: TIdHTTPResponseInfo);
 var
-  Route: TrsRoute;
-  Routes: TrsRouteMappings;
-  RequestRC: TrsRouteCriteria;
-  MatchingRC: TrsRouteCriteria;
+  RouteMappings: TrsRouteMappings;
+  RequestRC: IRouteCriteria;
+  MatchResult: TMatchResult;
   RequestPath: string;
 begin
   if ContextPath <> '' then
@@ -284,41 +289,34 @@ begin
 
   RequestPath := Copy(RequestPath, Pos('/', RequestPath) + 1, MAXINT);
 
-  RequestRC := TrsRouteCriteria.Create(RequestPath);
-  try
-    // find a route which consumes the incoming content type
-    RequestRC.Consumes := Request.ContentType;
-    // and produces the requested content tpye
-    RequestRC.Produces := Request.Accept;
+  // find a route which consumes the incoming content type
+  // and produces the requested content tpye
+  RequestRC := TrsRouteCriteria.Create(RequestPath, Request.ContentType, Request.Accept);
 
-    // find the route
-    Routes := RestConfig.MethodMappings(Request.Command);
-    MatchingRC := Routes.FindMatch(RequestRC, Route);
+  // find the route
+  RouteMappings := RestConfig.MethodMappings(Request.Command);
+  MatchResult := RouteMappings.FindMatch(RequestRC);
 
-    // either way (if Route is nil, return error message)
-    if Assigned(Route) then
+  // either way (if Route is nil, return error message)
+  if Assigned(MatchResult.Route) then
+  begin
+    DoCommand(RequestPath, MatchResult.RouteCriteria, MatchResult.Route, Request, Response);
+  end
+  else
+  begin
+    if RestConfig.HasMatch(RequestRC) then
     begin
-      DoCommand(RequestPath, MatchingRC, Route, Request, Response);
+      // there is a different handler registered, but not for this method:
+      // Send a '405 Method not allowed'
+      SendError(Response, 405,
+        Format('This resource does not support "%s" requests',
+        [Request.Command]));
     end
     else
     begin
-      if RestConfig.HasMatch(RequestRC) then
-      begin
-        // there is a different handler registered, but not for this method:
-        // Send a '405 Method not allowed'
-        SendError(Response, 405,
-          Format('This resource does not support "%s" requests',
-          [Request.Command]));
-      end
-      else
-      begin
-        // Send a '404 Document not found'
-        SendError(Response, 404);
-      end;
+      // Send a '404 Document not found'
+      SendError(Response, 404);
     end;
-
-  finally
-    RequestRC.Free;
   end;
 end;
 

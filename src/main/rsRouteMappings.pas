@@ -35,25 +35,53 @@ unit rsRouteMappings;
 interface
 
 uses
-  rsRoute, rsRouteCriteria,
+  rsInterfaces, rsRoute, rsRouteCriteria, rsGlobal,
   {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
   {$ENDIF DARAJA_LOGGING}
-  {$IFDEF FPC}fgl{$ELSE}Generics.Collections{$ENDIF},
-  SysUtils;
+  Contnrs,
+  SysUtils, Classes;
 
 type
+  TMatchResult = record
+    RouteCriteria: IRouteCriteria;
+    Route: TRsRoute;
+  end;
+
   (**
    * Route mappings.
    *)
-  TrsRouteMappings = class(TObjectDictionary<TrsRouteCriteria, TrsRoute>)
+  TrsRouteMappings = class(TInterfacedObject, IRouteMappings)
+  private
+    FRouteCriteriaList: IInterfaceList;
+    FRouteList: TObjectList;
   public
     constructor Create; overload;
+    destructor Destroy; override;
 
-    function FindMatch(C: TrsRouteCriteria; var Route: TrsRoute): TrsRouteCriteria;
+    procedure Add(const ACriteria: IRouteCriteria; const ARoute: TrsRoute);
+
+    function ContainsKey(const ACriteria: IRouteCriteria): Boolean;
+
+    function FindMatch(const ACriteria: IRouteCriteria): TMatchResult;
   end;
 
-  TrsMethodMappings = TObjectDictionary<string, TrsRouteMappings>;
+  TrsMethodMappings = class(TInterfacedObject, IMethodMappings)
+  private
+    FMappings: TStrings;
+  public
+    constructor Create; overload;
+    destructor Destroy; override;
+
+    procedure Add(Key: string; Value: TrsRouteMappings);
+
+    function ContainsKey(Key: string): Boolean;
+
+    function Methods: TStrings;
+
+    function Mapping(Index: string): TrsRouteMappings;
+
+  end;
 
 implementation
 
@@ -61,26 +89,90 @@ implementation
 
 constructor TrsRouteMappings.Create;
 begin
-  inherited Create([doOwnsKeys, doOwnsValues], TrsCriteriaComparer.Create);
+  inherited;
+
+  FRouteCriteriaList := TInterfaceList.Create;
+  FRouteList := TObjectList.Create(True);
 end;
 
-function TrsRouteMappings.FindMatch(C: TrsRouteCriteria;
-  var Route: TrsRoute): TrsRouteCriteria;
-var
-  MatchingRC: TrsRouteCriteria;
+destructor TrsRouteMappings.Destroy;
 begin
-  Route := nil;
-  Result := nil;
-  for MatchingRC in Keys do
+  FRouteList.Free;
+end;
+
+procedure TrsRouteMappings.Add(const ACriteria: IRouteCriteria; const ARoute: TrsRoute);
+begin
+  Assert(Assigned(FRouteCriteriaList));
+  Assert(Assigned(ACriteria));
+
+  FRouteCriteriaList.Add(ACriteria);
+  FRouteList.Add(ARoute);
+end;
+
+function TrsRouteMappings.ContainsKey(const ACriteria: IRouteCriteria): Boolean;
+begin
+  Result := FRouteCriteriaList.IndexOf(ACriteria) > -1;
+end;
+
+function TrsRouteMappings.FindMatch(const ACriteria: IRouteCriteria): TMatchResult;
+var
+  MatchingRC: IRouteCriteria;
+  I: Integer;
+begin
+  Result := Default(TMatchResult);
+  Result.RouteCriteria := nil;
+  Result.Route := nil;
+  for I := 0 to FRouteCriteriaList.Count - 1 do
   begin
+    MatchingRC := FRouteCriteriaList[I] as IRouteCriteria;
     // Log(Format('Comparing %s %s', [C.Path + C.Produces, MatchingRC.Path + MatchingRC.Produces]));
-    if TrsRouteCriteria.Matches(MatchingRC, C) then
+    if TrsRouteCriteria.Matches(MatchingRC, ACriteria) then
     begin
-      Route := Self[MatchingRC];
-      Result := MatchingRC;
+      Result.Route := FRouteList[I] as TrsRoute;
+      Result.RouteCriteria := MatchingRC;
       Break;
     end;
   end;
+end;
+
+{ TrsMethodMappings }
+
+procedure TrsMethodMappings.Add(Key: string; Value: TrsRouteMappings);
+begin
+  FMappings.AddObject(Key, Value);
+end;
+
+function TrsMethodMappings.ContainsKey(Key: string): Boolean;
+begin
+  Result := FMappings.IndexOf(Key) > -1;
+end;
+
+constructor TrsMethodMappings.Create;
+begin
+  inherited;
+
+  FMappings := TStringList.Create;
+end;
+
+destructor TrsMethodMappings.Destroy;
+var
+  I: Integer;
+begin
+  for I := 0 to FMappings.Count - 1 do FMappings.Objects[I].Free;
+
+  FMappings.Free;
+
+  inherited;
+end;
+
+function TrsMethodMappings.Mapping(Index: string): TrsRouteMappings;
+begin
+  Result := FMappings.Objects[FMappings.IndexOf(Index)] as TrsRouteMappings;
+end;
+
+function TrsMethodMappings.Methods: TStrings;
+begin
+  Result := FMappings;
 end;
 
 end.

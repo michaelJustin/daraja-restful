@@ -35,56 +35,62 @@ unit rsRouteCriteria;
 interface
 
 uses
-  {$IFDEF FPC}fgl{$ELSE}Generics.Defaults{$ENDIF},
+  rsInterfaces,
   Classes;
 
 type
   (**
    * Route criteria.
    *)
-  TrsRouteCriteria = class
-  public
-    Path: string;
-    Produces: string;
-    Consumes: string;
+  TrsRouteCriteria = class(TInterfacedObject, IRouteCriteria)
+  private
+    FPath: string;
+    FProduces: string;
+    FConsumes: string;
+    function GetConsumes: string;
+    function GetPath: string;
+    function GetProduces: string;
 
-    constructor Create(Path: string); overload;
-    constructor Create(Path: string; Consumes: string); overload;
+    class function PathMatches(const Left, Right: string): Boolean;
+
+  public
+    constructor Create(APath: string); overload;
+    constructor Create(APath: string; AConsumes: string); overload;
+    constructor Create(APath: string; AConsumes: string; AProduces: string); overload;
 
     function Equals(Obj: TObject): Boolean; override;
 
     function NormalizedPath: string;
 
-    class function Matches(const Left, Right: TrsRouteCriteria): Boolean;
-  end;
-
-  (**
-   * Criteria comparer.
-   *)
-  TrsCriteriaComparer = class(TInterfacedObject, IEqualityComparer<TrsRouteCriteria>)
-  public
-    class function PathMatches(const Left, Right: string): Boolean;
+    property Path: string read GetPath;
+    property Produces: string read GetProduces;
+    property Consumes: string read GetConsumes;
 
     class function PathParams(const Left, Right: string;
       const Params: TStrings): Boolean;
+    class function Matches(const Left, Right: IRouteCriteria): Boolean;
 
-    function Equals(const Left, Right: TrsRouteCriteria): Boolean; reintroduce;
-    function GetHashCode(const Value: TrsRouteCriteria): Integer; reintroduce;
   end;
 
 implementation
 
 { TRouteCriteria }
 
-constructor TrsRouteCriteria.Create(Path: string);
+constructor TrsRouteCriteria.Create(APath: string);
 begin
-  Self.Path := Path;
+  FPath := APath;
 end;
 
-constructor TrsRouteCriteria.Create(Path, Consumes: string);
+constructor TrsRouteCriteria.Create(APath, AConsumes: string);
 begin
-  Create(Path);
-  Self.Consumes := Consumes;
+  Create(APath);
+  FConsumes := AConsumes;
+end;
+
+constructor TrsRouteCriteria.Create(APath, AConsumes, AProduces: string);
+begin
+  Create(APath, AConsumes);
+  FProduces := AProduces;
 end;
 
 function TrsRouteCriteria.Equals(Obj: TObject): Boolean;
@@ -105,9 +111,24 @@ begin
     and (Self.Produces = Tmp.Produces)
 end;
 
-class function TrsRouteCriteria.Matches(const Left, Right: TrsRouteCriteria): Boolean;
+function TrsRouteCriteria.GetConsumes: string;
 begin
-  Result := TrsCriteriaComparer.PathMatches(Left.Path, Right.Path)
+  Result := FConsumes;
+end;
+
+function TrsRouteCriteria.GetPath: string;
+begin
+  Result := FPath;
+end;
+
+function TrsRouteCriteria.GetProduces: string;
+begin
+  Result := FProduces;
+end;
+
+class function TrsRouteCriteria.Matches(const Left, Right: IRouteCriteria): Boolean;
+begin
+  Result := PathMatches(Left.Path, Right.Path)
     and ((Left.Consumes = '') or (Left.Consumes = Right.Consumes))
     and ((Left.Produces = '') or (Pos(Left.Produces, Right.Produces) > 0))
 end;
@@ -116,9 +137,12 @@ function TrsRouteCriteria.NormalizedPath: string;
 var
   SL: TStrings;
   S: string;
+  I: Integer;
 begin
   if Pos('{', Path) = 0 then
     Exit(Path);
+
+  Result := '';
 
   // replace all {param} occurences with {p}
   SL := TStringList.Create;
@@ -126,8 +150,9 @@ begin
     SL.StrictDelimiter := True;
     SL.Delimiter := '/';
     SL.DelimitedText := Path;
-    for S in SL do
+    for I := 0 to SL.Count - 1 do
     begin
+      S := SL[I];
       if Pos('{', S) = 1 then
       begin
         Result := Result + '{p}/';
@@ -154,19 +179,7 @@ begin
   end;
 end;
 
-{ TCriteriaComparer }
-
-function TrsCriteriaComparer.Equals(const Left, Right: TrsRouteCriteria): Boolean;
-begin
-  Result := Left.Equals(Right);
-end;
-
-function TrsCriteriaComparer.GetHashCode(const Value: TrsRouteCriteria): Integer;
-begin
-  Result := SlashCount(Value.Path); // TODO BobJenkinsHash(Value);
-end;
-
-class function TrsCriteriaComparer.PathMatches(const Left,
+class function TrsRouteCriteria.PathMatches(const Left,
   Right: string): Boolean;
 begin
   if (Left = Right) then
@@ -184,7 +197,7 @@ begin
   Exit(True);
 end;
 
-class function TrsCriteriaComparer.PathParams(const Left,
+class function TrsRouteCriteria.PathParams(const Left,
   Right: string; const Params: TStrings): Boolean;
 var
   SLL, SLR: TStrings;

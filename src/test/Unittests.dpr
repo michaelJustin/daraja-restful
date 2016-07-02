@@ -41,9 +41,12 @@ uses
   GUITestRunner,
   TextTestRunner,
   SysUtils,
-  rsInterfaces in '..\main\rsInterfaces.pas';
+  rsInterfaces in '..\main\rsInterfaces.pas',
+  rsGlobal in '..\main\rsGlobal.pas';
 
 begin
+  ReportMemoryLeaksOnShutdown := True;
+
   RegisterTests('', [TRestfulTests.Suite]);
 
   if FindCmdLineSwitch('text-mode', ['-', '/'], true) then
