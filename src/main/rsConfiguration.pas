@@ -77,13 +77,13 @@ type
 
     destructor Destroy; override;
 
-    procedure AddMapping(Method: string; const ACriteria: IRouteCriteria; const ARoute: TrsRoute); overload;
+    procedure AddMapping(const AMethod: string; const ACriteria: IRouteCriteria; const ARoute: TrsRoute); overload;
 
-    procedure AddMapping(Method: string; Route: TrsRoute); overload;
+    procedure AddMapping(const AMethod: string; const ARoute: TrsRoute); overload;
 
-    function MethodMappings(Method: string): TrsRouteMappings;
+    function MethodMappings(const AMethod: string): TrsRouteMappings;
 
-    function HasMatch(const Criteria: IRouteCriteria): Boolean;
+    function HasMatch(const ACriteria: IRouteCriteria): Boolean;
 
     procedure ClearNextPath;
 
@@ -180,7 +180,7 @@ begin
   {$ENDIF DARAJA_LOGGING}
 end;
 
-function TrsConfiguration.HasMatch(const Criteria: IRouteCriteria): Boolean;
+function TrsConfiguration.HasMatch(const ACriteria: IRouteCriteria): Boolean;
 var
   Methods: TStrings;
   Method: string;
@@ -192,11 +192,11 @@ begin
     for Method in Methods do
     begin
       RouteMappings := Mappings.Mapping(Method);
-      RouteMappings.FindMatch(Criteria, R);
+      RouteMappings.FindMatch(ACriteria, R);
       if Assigned(R) then
       begin
-        Trace('Found a handler for ' + Criteria.Path);  // TODO log handler method
-        Exit(True)
+        Trace('Found a handler for ' + ACriteria.Path);  // TODO log handler method
+        Exit(True);
       end;
     end;
     Result := False;
@@ -205,14 +205,14 @@ begin
   end;
 end;
 
-function TrsConfiguration.MethodMappings(Method: string): TrsRouteMappings;
+function TrsConfiguration.MethodMappings(const AMethod: string): TrsRouteMappings;
 begin
-  if not Mappings.ContainsKey(Method) then
+  if not Mappings.ContainsKey(AMethod) then
   begin
-    raise Exception.CreateFmt('Unknown method "%s"', [Method]);
+    raise Exception.CreateFmt('Unknown method "%s"', [AMethod]);
   end;
 
-  Result := Mappings.Mapping(Method);
+  Result := Mappings.Mapping(AMethod);
 end;
 
 procedure TrsConfiguration.SetPath(const APath: string);
@@ -229,24 +229,24 @@ begin
   end;
 end;
 
-procedure TrsConfiguration.AddMapping(Method: string; Route: TrsRoute);
+procedure TrsConfiguration.AddMapping(const AMethod: string; const ARoute: TrsRoute);
 var
   C: TrsRouteCriteria;
 begin
-  C := TrsRouteCriteria.Create(Route.Path, NextConsumes, NextProduces);
+  C := TrsRouteCriteria.Create(ARoute.Path, NextConsumes, NextProduces);
 
-  AddMapping(Method, C, Route);
+  AddMapping(AMethod, C, ARoute);
 
   {$IFDEF DARAJA_LOGGING}
   Logger.Info(
-    Format('Added HTTP "%s" mapping for path %s', [Method, CurrentPath]));
+    Format('Added HTTP "%s" mapping for path %s', [AMethod, CurrentPath]));
   {$ENDIF DARAJA_LOGGING}
 end;
 
-procedure TrsConfiguration.AddMapping(Method: string;
+procedure TrsConfiguration.AddMapping(const AMethod: string;
   const ACriteria: IRouteCriteria; const ARoute: TrsRoute);
 begin
-  if MethodMappings(Method).ContainsKey(ACriteria) then
+  if MethodMappings(AMethod).ContainsKey(ACriteria) then
   begin
     // Criteria.Free;
     ARoute.Free;
@@ -254,7 +254,7 @@ begin
       [ARoute.Path]);
   end;
 
-  MethodMappings(Method).Add(ACriteria, ARoute);
+  MethodMappings(AMethod).Add(ACriteria, ARoute);
 
   ClearProducesConsumes;
 

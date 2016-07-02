@@ -71,11 +71,12 @@ type
     procedure SendError(AResponseInfo: TIdHTTPResponseInfo; Error:
       Integer; ErrorMessage: string = '');
 
-    procedure AddPathParams(const RequestPath: string; const Route:
-      TrsRoute; const ARequestInfo: TIdHTTPRequestInfo);
+    procedure AddPathParams(const RequestPath: string;
+      const Route: IRoute; const ARequestInfo: TIdHTTPRequestInfo);
 
     procedure DoCommand(const RequestPath: string;
-      const MatchingRC: IRouteCriteria; const Route: TrsRoute;
+      const MatchingRC: IRouteCriteria;
+      const Route: IRoute;
       const ARequestInfo: TIdHTTPRequestInfo;
       const AResponseInfo: TIdHTTPResponseInfo);
 
@@ -210,7 +211,7 @@ begin
 end;
 
 procedure TdjRestfulComponent.AddPathParams(const RequestPath: string; const
-  Route: TrsRoute; const ARequestInfo: TIdHTTPRequestInfo);
+  Route: IRoute; const ARequestInfo: TIdHTTPRequestInfo);
 var
   S: string;
   Temp: string;
@@ -238,7 +239,7 @@ end;
 procedure TdjRestfulComponent.DoCommand(
   const RequestPath: string;
   const MatchingRC: IRouteCriteria;
-  const Route: TrsRoute;
+  const Route: IRoute;
   const ARequestInfo: TIdHTTPRequestInfo;
   const AResponseInfo: TIdHTTPResponseInfo);
 begin
