@@ -258,7 +258,7 @@ end;
 procedure TRestfulTests.TestTrsRouteMappings;
 var
   RM: IRouteMappings;
-  RC, RC2: IRouteCriteria;
+  RC: IRouteCriteria;
 begin
   RM := TrsRouteMappings.Create;
 

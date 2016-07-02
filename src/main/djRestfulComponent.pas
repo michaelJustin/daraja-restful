@@ -269,8 +269,8 @@ procedure TdjRestfulComponent.Service(Context: TdjServerContext;
   Request: TIdHTTPRequestInfo; Response: TIdHTTPResponseInfo);
 var
   Route: TrsRoute;
-  Routes: TrsRouteMappings;
-  RequestRC: TrsRouteCriteria;
+  RouteMappings: TrsRouteMappings;
+  RequestRC: IRouteCriteria;
   MatchingRC: IRouteCriteria;
   RequestPath: string;
 begin
@@ -290,8 +290,8 @@ begin
   RequestRC := TrsRouteCriteria.Create(RequestPath, Request.ContentType, Request.Accept);
   try
     // find the route
-    Routes := RestConfig.MethodMappings(Request.Command);
-    MatchingRC := Routes.FindMatch(RequestRC, Route);
+    RouteMappings := RestConfig.MethodMappings(Request.Command);
+    MatchingRC := RouteMappings.FindMatch(RequestRC, Route);
 
     // either way (if Route is nil, return error message)
     if Assigned(Route) then
@@ -316,7 +316,7 @@ begin
     end;
 
   finally
-    RequestRC.Free;
+    // RequestRC.Free;
   end;
 end;
 

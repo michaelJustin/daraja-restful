@@ -77,7 +77,7 @@ type
 
     destructor Destroy; override;
 
-    procedure AddMapping(Method: string; Criteria: TrsRouteCriteria; Route: TrsRoute); overload;
+    procedure AddMapping(Method: string; const ACriteria: IRouteCriteria; const ARoute: TrsRoute); overload;
 
     procedure AddMapping(Method: string; Route: TrsRoute); overload;
 
@@ -184,15 +184,15 @@ function TrsConfiguration.HasMatch(const Criteria: IRouteCriteria): Boolean;
 var
   Methods: TStrings;
   Method: string;
-  RM: TrsRouteMappings;
+  RouteMappings: TrsRouteMappings;
   R: TrsRoute;
 begin
   Methods := Mappings.Methods;
   try
     for Method in Methods do
     begin
-      RM := Mappings.Mapping(Method);
-      RM.FindMatch(Criteria, R);
+      RouteMappings := Mappings.Mapping(Method);
+      RouteMappings.FindMatch(Criteria, R);
       if Assigned(R) then
       begin
         Trace('Found a handler for ' + Criteria.Path);  // TODO log handler method
@@ -244,17 +244,17 @@ begin
 end;
 
 procedure TrsConfiguration.AddMapping(Method: string;
-  Criteria: TrsRouteCriteria; Route: TrsRoute);
+  const ACriteria: IRouteCriteria; const ARoute: TrsRoute);
 begin
-  if MethodMappings(Method).ContainsKey(Criteria) then
+  if MethodMappings(Method).ContainsKey(ACriteria) then
   begin
-    Criteria.Free;
-    Route.Free;
+    // Criteria.Free;
+    ARoute.Free;
     raise DuplicateMappingException.CreateFmt('Duplicate mapping for %s',
-      [Route.Path]);
+      [ARoute.Path]);
   end;
 
-  MethodMappings(Method).Add(Criteria, Route);
+  MethodMappings(Method).Add(ACriteria, ARoute);
 
   ClearProducesConsumes;
 
