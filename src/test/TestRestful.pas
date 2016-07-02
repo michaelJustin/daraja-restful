@@ -41,13 +41,16 @@ type
 
     // Test the OPTIONS HTTP method
     procedure TestOPTIONS;
+
+    procedure TestRoute;
+
   end;
 
 implementation
 
 uses
+  rsConfiguration, rsRoute, rsGlobal, rsInterfaces,
   djRestfulComponent, djInterfaces, djServer, djWebAppContext,
-  rsConfiguration, rsRoute, rsGlobal,
   IdHTTP, Classes;
 
 type
@@ -60,7 +63,6 @@ type
   public
     procedure Init(const Config: IWebComponentConfig); override;
   end;
-
 
 { TPatchRestful }
 
@@ -164,5 +166,13 @@ begin
   end;
 end;
 
+procedure TRestfulTests.TestRoute;
+var
+  Route: IRoute;
+begin
+  Route := TrsRoute.Create('path', procedure(Req: TRequest; Res: TResponse) begin end);
+
+  CheckEquals('path', Route.Path);
+end;
 
 end.
