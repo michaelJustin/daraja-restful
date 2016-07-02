@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectOptions>
+    <Version Value="9"/>
+    <PathDelim Value="\"/>
+    <General>
+      <SessionStorage Value="InProjectDir"/>
+      <MainUnit Value="0"/>
+      <Title Value="Unittests"/>
+      <UseXPManifest Value="True"/>
+      <Icon Value="0"/>
+    </General>
+    <i18n>
+      <EnableI18N LFM="False"/>
+    </i18n>
+    <VersionInfo>
+      <StringTable ProductVersion=""/>
+    </VersionInfo>
+    <BuildModes Count="1">
+      <Item1 Name="Default" Default="True"/>
+    </BuildModes>
+    <PublishOptions>
+      <Version Value="2"/>
+    </PublishOptions>
+    <RunParams>
+      <local>
+        <FormatVersion Value="1"/>
+      </local>
+    </RunParams>
+    <RequiredPackages Count="3">
+      <Item1>
+        <PackageName Value="fpcunittestrunner"/>
+      </Item1>
+      <Item2>
+        <PackageName Value="FCL"/>
+      </Item2>
+      <Item3>
+        <PackageName Value="LCL"/>
+      </Item3>
+    </RequiredPackages>
+    <Units Count="4">
+      <Unit0>
+        <Filename Value="Unittests.lpr"/>
+        <IsPartOfProject Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="RouteTests.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="RouteCriteriaTests.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="TestTFPGMap.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit3>
+    </Units>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="11"/>
+    <PathDelim Value="\"/>
+    <Target>
+      <Filename Value="Unittests"/>
+    </Target>
+    <SearchPaths>
+      <IncludeFiles Value="$(ProjOutDir);..\..\..\indy-10.6\Lib\Core;C:\Delphi\indy-10.6\Lib\Core\"/>
+      <OtherUnitFiles Value="..\..\source;..\..\source\optional;..\common;..\..\..\slf4p\src\main;..\..\..\indy-10.6\Lib\Core;..\..\..\indy-10.6\Lib\Protocols;..\..\..\indy-10.6\Lib\System;C:\Delphi\indy-10.6\Lib\Core\;C:\Delphi\indy-10.6\Lib\Protocols\;C:\Delphi\indy-10.6\Lib\System\"/>
+      <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+    </SearchPaths>
+    <Parsing>
+      <SyntaxOptions>
+        <SyntaxMode Value="Delphi"/>
+        <AllowLabel Value="False"/>
+      </SyntaxOptions>
+    </Parsing>
+    <CodeGeneration>
+      <Optimizations>
+        <OptimizationLevel Value="2"/>
+      </Optimizations>
+    </CodeGeneration>
+    <Linking>
+      <Debugging>
+        <UseHeaptrc Value="True"/>
+      </Debugging>
+    </Linking>
+    <Other>
+      <Verbosity>
+        <ShowNotes Value="False"/>
+        <ShowHints Value="False"/>
+      </Verbosity>
+      <CustomOptions Value="-dDARAJA_LOGGING
+-dxUSE_ICONV"/>
+    </Other>
+  </CompilerOptions>
+  <Debugging>
+    <Exceptions Count="23">
+      <Item1>
+        <Name Value="EAbort"/>
+      </Item1>
+      <Item2>
+        <Name Value="ECodetoolError"/>
+      </Item2>
+      <Item3>
+        <Name Value="EFOpenError"/>
+      </Item3>
+      <Item4>
+        <Name Value="EBTStompClientNotConnectedError"/>
+      </Item4>
+      <Item5>
+        <Name Value="ESynapseError"/>
+      </Item5>
+      <Item6>
+        <Name Value="EAssertionFailedError"/>
+      </Item6>
+      <Item7>
+        <Name Value="EIdReadTimeout"/>
+      </Item7>
+      <Item8>
+        <Name Value="EConnectionFailedException"/>
+      </Item8>
+      <Item9>
+        <Name Value="Exception"/>
+      </Item9>
+      <Item10>
+        <Name Value="EIgnoredTest"/>
+      </Item10>
+      <Item11>
+        <Name Value="EBTStompServerErrorMessage"/>
+      </Item11>
+      <Item12>
+        <Name Value="EBTStompServerHeartbeatMissing"/>
+      </Item12>
+      <Item13>
+        <Name Value="EJMSException"/>
+      </Item13>
+      <Item14>
+        <Name Value="EBTStompError"/>
+      </Item14>
+      <Item15>
+        <Name Value="EIdSocketError"/>
+      </Item15>
+      <Item16>
+        <Name Value="EIdConnClosedGracefully"/>
+      </Item16>
+      <Item17>
+        <Name Value="EConvertError"/>
+      </Item17>
+      <Item18>
+        <Name Value="EIllegalStateException"/>
+      </Item18>
+      <Item19>
+        <Name Value="EIdHTTPProtocolException"/>
+      </Item19>
+      <Item20>
+        <Name Value="EWebComponentException"/>
+      </Item20>
+      <Item21>
+        <Name Value="EUnitTestException"/>
+      </Item21>
+      <Item22>
+        <Name Value="EListError"/>
+      </Item22>
+      <Item23>
+        <Name Value="EIdCouldNotBindSocket"/>
+      </Item23>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

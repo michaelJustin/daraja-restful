@@ -35,7 +35,7 @@ unit rsConfiguration;
 interface
 
 uses
-  rsRoute, rsRouteMappings, rsRouteCriteria,
+  rsInterfaces, rsRoute, rsRouteMappings, rsRouteCriteria,
   {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
   {$ENDIF DARAJA_LOGGING}
@@ -48,7 +48,7 @@ type
   (**
    * Context configuration.
    *)
-  TrsConfiguration = class(TInterfacedObject)
+  TrsConfiguration = class(TInterfacedObject, IContextConfiguration)
   private
     {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
