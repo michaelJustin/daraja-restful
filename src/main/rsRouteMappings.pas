@@ -45,7 +45,7 @@ uses
 type
   TMatchResult = record
     RouteCriteria: IRouteCriteria;
-    Route: TrsRoute;
+    Route: TRsRoute;
   end;
 
   (**

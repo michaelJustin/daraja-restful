@@ -41,6 +41,7 @@ type
 
   TRouteProc = reference
     to procedure(Request: TRequest; Response: TResponse);
+  // TRouteProc = procedure(Request: TRequest; Response: TResponse) of object;
 
 implementation
 

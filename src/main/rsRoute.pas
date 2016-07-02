@@ -53,6 +53,7 @@ type
     function GetHandler: TRouteProc;
   public
     constructor Create(Path: string; Handler: TRouteProc);
+    destructor Destroy; override;
 
     property Path: string read GetPath;
     property Handler: TRouteProc read GetHandler;
@@ -66,6 +67,12 @@ constructor TrsRoute.Create(Path: string; Handler: TRouteProc);
 begin
   FPath := Path;
   FHandler := Handler;
+end;
+
+destructor TrsRoute.Destroy;
+begin
+
+  inherited;
 end;
 
 function TrsRoute.GetHandler: TRouteProc;

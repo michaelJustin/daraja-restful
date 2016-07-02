@@ -242,6 +242,8 @@ procedure TdjRestfulComponent.DoCommand(
   const Route: IRoute;
   const ARequestInfo: TIdHTTPRequestInfo;
   const AResponseInfo: TIdHTTPResponseInfo);
+var
+  RP: TRouteProc;
 begin
   // check and set path parameters
   AddPathParams(RequestPath, Route, ARequestInfo);
@@ -252,9 +254,11 @@ begin
     AResponseInfo.ContentType := MatchingRC.Produces;
   end;
 
+  RP := Route.Handler;
+
   // invoke TRouteProc
   try
-    Route.Handler.Invoke(ARequestInfo, AResponseInfo);
+    RP(ARequestInfo, AResponseInfo);
   except
     on E: Exception do
     begin

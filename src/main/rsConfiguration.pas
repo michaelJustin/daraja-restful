@@ -244,8 +244,6 @@ procedure TrsConfiguration.AddMapping(const AMethod: string;
 begin
   if MethodMappings(AMethod).ContainsKey(ACriteria) then
   begin
-    // Criteria.Free;
-    ARoute.Free;
     raise DuplicateMappingException.CreateFmt('Duplicate mapping for %s',
       [ARoute.Path]);
   end;
