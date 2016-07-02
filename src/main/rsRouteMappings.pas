@@ -39,7 +39,7 @@ uses
   {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
   {$ENDIF DARAJA_LOGGING}
-  {$IFDEF FPC}fgl{$ELSE}Generics.Collections{$ENDIF},
+  Contnrs,
   SysUtils, Classes;
 
 type
@@ -48,16 +48,15 @@ type
    *)
   TrsRouteMappings = class(TInterfacedObject, IRouteMappings)
   private
-    FMappings: TObjectDictionary<TrsRouteCriteria, TrsRoute>;
-    // FRouteCriteriaList: IInterfaceList;
-    // FRouteList: TObjectList;
+    FRouteCriteriaList: TObjectList;
+    FRouteList: TObjectList;
   public
     constructor Create; overload;
     destructor Destroy; override;
 
-    procedure Add(Criteria: TrsRouteCriteria; Route: TrsRoute);
+    procedure Add(const ACriteria: TrsRouteCriteria; const ARoute: TrsRoute);
 
-    function ContainsKey(Criteria: TrsRouteCriteria): Boolean;
+    function ContainsKey(const ACriteria: TrsRouteCriteria): Boolean;
 
     function FindMatch(const ACriteria: IRouteCriteria; var Route: TrsRoute): TrsRouteCriteria;
   end;
@@ -83,41 +82,46 @@ implementation
 
 { TrsRouteMappings }
 
-procedure TrsRouteMappings.Add(Criteria: TrsRouteCriteria; Route: TrsRoute);
+procedure TrsRouteMappings.Add(const ACriteria: TrsRouteCriteria; const ARoute: TrsRoute);
 begin
-  FMappings.Add(Criteria, Route);
+  FRouteCriteriaList.Add(ACriteria);
+  FRouteList.Add(ARoute);
 end;
 
-function TrsRouteMappings.ContainsKey(Criteria: TrsRouteCriteria): Boolean;
+function TrsRouteMappings.ContainsKey(const ACriteria: TrsRouteCriteria): Boolean;
 begin
-  Result := FMappings.ContainsKey(Criteria);
+  Result := FRouteCriteriaList.IndexOf(ACriteria) > -1;
 end;
 
 constructor TrsRouteMappings.Create;
 begin
   inherited;
 
-  FMappings := TObjectDictionary<TrsRouteCriteria, TrsRoute>.Create([doOwnsKeys, doOwnsValues], TrsCriteriaComparer.Create);
+  FRouteCriteriaList := TObjectList.Create(True);
+  FRouteList := TObjectList.Create(True);
 end;
 
 destructor TrsRouteMappings.Destroy;
 begin
-  FMappings.Free;
+  FRouteCriteriaList.Free;
+  FRouteList.Free;
 end;
 
 function TrsRouteMappings.FindMatch(const ACriteria: IRouteCriteria;
   var Route: TrsRoute): TrsRouteCriteria;
 var
   MatchingRC: TrsRouteCriteria;
+  I: Integer;
 begin
   Route := nil;
   Result := nil;
-  for MatchingRC in FMappings.Keys do
+  for I := 0 to FRouteCriteriaList.Count - 1 do
   begin
+    MatchingRC := FRouteCriteriaList[I] as TrsRouteCriteria;
     // Log(Format('Comparing %s %s', [C.Path + C.Produces, MatchingRC.Path + MatchingRC.Produces]));
     if TrsRouteCriteria.Matches(MatchingRC, ACriteria) then
     begin
-      Route := FMappings[MatchingRC];
+      Route := FRouteList[I] as TrsRoute;
       Result := MatchingRC;
       Break;
     end;
