@@ -57,7 +57,7 @@ type
 
     function ContainsKey(Criteria: TrsRouteCriteria): Boolean;
 
-    function FindMatch(C: TrsRouteCriteria; var Route: TrsRoute): TrsRouteCriteria;
+    function FindMatch(const ACriteria: IRouteCriteria; var Route: TrsRoute): TrsRouteCriteria;
   end;
 
   TrsMethodMappings = class(TInterfacedObject, IMethodMappings)
@@ -103,7 +103,7 @@ begin
   FMappings.Free;
 end;
 
-function TrsRouteMappings.FindMatch(C: TrsRouteCriteria;
+function TrsRouteMappings.FindMatch(const ACriteria: IRouteCriteria;
   var Route: TrsRoute): TrsRouteCriteria;
 var
   MatchingRC: TrsRouteCriteria;
@@ -113,7 +113,7 @@ begin
   for MatchingRC in FMappings.Keys do
   begin
     // Log(Format('Comparing %s %s', [C.Path + C.Produces, MatchingRC.Path + MatchingRC.Produces]));
-    if TrsRouteCriteria.Matches(MatchingRC, C) then
+    if TrsRouteCriteria.Matches(MatchingRC, ACriteria) then
     begin
       Route := FMappings[MatchingRC];
       Result := MatchingRC;

@@ -36,10 +36,10 @@ type
   private
 
   published
-    // check PATCH method -------------------------------------------------
+    procedure TestGET;
+
     procedure TestPATCH;
 
-    // Test the OPTIONS HTTP method
     procedure TestOPTIONS;
 
     procedure TestTrsRoute;
@@ -56,6 +56,11 @@ uses
   IdHTTP, Classes;
 
 type
+  TGetRestful = class(TdjRestfulComponent)
+  public
+    procedure Init(const Config: IWebComponentConfig); override;
+  end;
+
   TPatchRestful = class(TdjRestfulComponent)
   public
     procedure Init(const Config: IWebComponentConfig); override;
@@ -65,6 +70,21 @@ type
   public
     procedure Init(const Config: IWebComponentConfig); override;
   end;
+
+{ TGetRestful }
+
+procedure TGetRestful.Init(const Config: IWebComponentConfig);
+begin
+  inherited;
+
+  &Path('/files');
+  &Path('{param}');
+  GET
+    (procedure(Request: TRequest; Response: TResponse)
+    begin
+
+    end);
+end;
 
 { TPatchRestful }
 
@@ -101,6 +121,40 @@ begin
 end;
 
 { TRestfulTests }
+
+procedure TRestfulTests.TestGET;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+  HTTP: TIdHTTP;
+  PatchStream: TStream;
+begin
+  Server := TdjServer.Create;
+  try
+    // add a context handler for http://127.0.0.1/
+    Context := TdjWebAppContext.Create('');
+    // add the RESTful component at http://127.0.0.1/rest/*
+    Context.Add(TGetRestful, '/rest/*');
+
+    Server.Add(Context);
+    Server.Start;
+
+    PatchStream := TStringStream.Create('<patch>example GET content</patch>');
+    try
+      HTTP := TIdHTTP.Create;
+      try
+        HTTP.Get('http://127.0.0.1/rest/files/get.txt', PatchStream);
+        CheckEquals(200, HTTP.ResponseCode);
+      finally
+        HTTP.Free;
+      end;
+    finally
+      PatchStream.Free;
+    end;
+  finally
+    Server.Free;
+  end;
+end;
 
 procedure TRestfulTests.TestPATCH;
 var
