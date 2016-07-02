@@ -312,20 +312,24 @@ var
 begin
   RM := TrsRouteMappings.Create;
 
-  RC := TrsRouteCriteria.Create('path', 'consumes', 'produces');
+  try
+    RC := TrsRouteCriteria.Create('path', 'consumes', 'produces');
 
-  CheckFalse(RM.ContainsKey(RC));
+    CheckFalse(RM.ContainsKey(RC));
 
-  Route := TrsRoute.Create('path',
-  {$IFDEF FPC}
-  MyTestProc);
-  {$ELSE}
-  procedure(Req: TRequest; Res: TResponse) begin end);
-  {$ENDIF}
+    Route := TrsRoute.Create('path',
+    {$IFDEF FPC}
+    MyTestProc);
+    {$ELSE}
+    procedure(Req: TRequest; Res: TResponse) begin end);
+    {$ENDIF}
 
-  RM.Add(RC, Route);
+    RM.Add(RC, Route);
 
-  CheckTrue(RM.ContainsKey(RC));
+    CheckTrue(RM.ContainsKey(RC));
+  finally
+    RM.Free;
+  end;
 
 end;
 

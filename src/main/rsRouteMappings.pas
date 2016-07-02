@@ -97,7 +97,6 @@ end;
 
 destructor TrsRouteMappings.Destroy;
 begin
-  // FRouteCriteriaList.Free;
   FRouteList.Free;
 end;
 

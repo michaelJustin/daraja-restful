@@ -227,7 +227,7 @@ end;
 
 procedure TrsConfiguration.AddMapping(const AMethod: string; const ARoute: TrsRoute);
 var
-  C: TrsRouteCriteria;
+  C: IRouteCriteria;
 begin
   C := TrsRouteCriteria.Create(ARoute.Path, NextConsumes, NextProduces);
 
