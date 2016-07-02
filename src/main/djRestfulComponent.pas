@@ -75,7 +75,7 @@ type
       TrsRoute; const ARequestInfo: TIdHTTPRequestInfo);
 
     procedure DoCommand(const RequestPath: string;
-      const MatchingRC: TrsRouteCriteria; const Route: TrsRoute;
+      const MatchingRC: IRouteCriteria; const Route: TrsRoute;
       const ARequestInfo: TIdHTTPRequestInfo;
       const AResponseInfo: TIdHTTPResponseInfo);
 
@@ -237,7 +237,7 @@ end;
 
 procedure TdjRestfulComponent.DoCommand(
   const RequestPath: string;
-  const MatchingRC: TrsRouteCriteria;
+  const MatchingRC: IRouteCriteria;
   const Route: TrsRoute;
   const ARequestInfo: TIdHTTPRequestInfo;
   const AResponseInfo: TIdHTTPResponseInfo);
@@ -271,7 +271,7 @@ var
   Route: TrsRoute;
   Routes: TrsRouteMappings;
   RequestRC: TrsRouteCriteria;
-  MatchingRC: TrsRouteCriteria;
+  MatchingRC: IRouteCriteria;
   RequestPath: string;
 begin
   if ContextPath <> '' then

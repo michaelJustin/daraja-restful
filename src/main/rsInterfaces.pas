@@ -68,7 +68,7 @@ type
   IRouteMappings = interface
     ['{0579F025-A69E-4104-BED9-0D5ED1F43523}']
 
-    // function ContainsKey(Criteria: IRouteCriteria): Boolean;
+    function ContainsKey(const ACriteria: IRouteCriteria): Boolean;
   end;
 
   IMethodMappings = interface

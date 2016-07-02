@@ -45,6 +45,8 @@ type
     procedure TestTrsRoute;
 
     procedure TestTrsRouteCriteria;
+
+    procedure TestTrsRouteMappings;
   end;
 
 implementation
@@ -251,6 +253,19 @@ begin
   CheckEquals('produces', RC2.Produces);
 
   CheckFalse(TrsRouteCriteria.Matches(RC, RC2));
+end;
+
+procedure TRestfulTests.TestTrsRouteMappings;
+var
+  RM: IRouteMappings;
+  RC, RC2: IRouteCriteria;
+begin
+  RM := TrsRouteMappings.Create;
+
+  RC := TrsRouteCriteria.Create('path', 'consumes', 'produces');
+
+  CheckFalse(RM.ContainsKey(RC));
+
 end;
 
 end.

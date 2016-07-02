@@ -48,17 +48,17 @@ type
    *)
   TrsRouteMappings = class(TInterfacedObject, IRouteMappings)
   private
-    FRouteCriteriaList: TObjectList;
+    FRouteCriteriaList: TInterfaceList;
     FRouteList: TObjectList;
   public
     constructor Create; overload;
     destructor Destroy; override;
 
-    procedure Add(const ACriteria: TrsRouteCriteria; const ARoute: TrsRoute);
+    procedure Add(const ACriteria: IRouteCriteria; const ARoute: TrsRoute);
 
-    function ContainsKey(const ACriteria: TrsRouteCriteria): Boolean;
+    function ContainsKey(const ACriteria: IRouteCriteria): Boolean;
 
-    function FindMatch(const ACriteria: IRouteCriteria; var Route: TrsRoute): TrsRouteCriteria;
+    function FindMatch(const ACriteria: IRouteCriteria; var Route: TrsRoute): IRouteCriteria;
   end;
 
   TrsMethodMappings = class(TInterfacedObject, IMethodMappings)
@@ -82,22 +82,11 @@ implementation
 
 { TrsRouteMappings }
 
-procedure TrsRouteMappings.Add(const ACriteria: TrsRouteCriteria; const ARoute: TrsRoute);
-begin
-  FRouteCriteriaList.Add(ACriteria);
-  FRouteList.Add(ARoute);
-end;
-
-function TrsRouteMappings.ContainsKey(const ACriteria: TrsRouteCriteria): Boolean;
-begin
-  Result := FRouteCriteriaList.IndexOf(ACriteria) > -1;
-end;
-
 constructor TrsRouteMappings.Create;
 begin
   inherited;
 
-  FRouteCriteriaList := TObjectList.Create(True);
+  FRouteCriteriaList := TInterfaceList.Create;
   FRouteList := TObjectList.Create(True);
 end;
 
@@ -107,17 +96,28 @@ begin
   FRouteList.Free;
 end;
 
+procedure TrsRouteMappings.Add(const ACriteria: IRouteCriteria; const ARoute: TrsRoute);
+begin
+  FRouteCriteriaList.Add(ACriteria);
+  FRouteList.Add(ARoute);
+end;
+
+function TrsRouteMappings.ContainsKey(const ACriteria: IRouteCriteria): Boolean;
+begin
+  Result := FRouteCriteriaList.IndexOf(ACriteria) > -1;
+end;
+
 function TrsRouteMappings.FindMatch(const ACriteria: IRouteCriteria;
-  var Route: TrsRoute): TrsRouteCriteria;
+  var Route: TrsRoute): IRouteCriteria;
 var
-  MatchingRC: TrsRouteCriteria;
+  MatchingRC: IRouteCriteria;
   I: Integer;
 begin
   Route := nil;
   Result := nil;
   for I := 0 to FRouteCriteriaList.Count - 1 do
   begin
-    MatchingRC := FRouteCriteriaList[I] as TrsRouteCriteria;
+    MatchingRC := FRouteCriteriaList[I] as IRouteCriteria;
     // Log(Format('Comparing %s %s', [C.Path + C.Produces, MatchingRC.Path + MatchingRC.Produces]));
     if TrsRouteCriteria.Matches(MatchingRC, ACriteria) then
     begin
