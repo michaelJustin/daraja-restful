@@ -8,7 +8,6 @@
       <MainUnit Value="0"/>
       <Title Value="Unittests"/>
       <UseXPManifest Value="True"/>
-      <Icon Value="0"/>
     </General>
     <i18n>
       <EnableI18N LFM="False"/>
@@ -38,23 +37,27 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="4">
+    <Units Count="5">
       <Unit0>
         <Filename Value="Unittests.lpr"/>
         <IsPartOfProject Value="True"/>
       </Unit0>
       <Unit1>
-        <Filename Value="RouteTests.pas"/>
+        <Filename Value="..\main\rsInterfaces.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit1>
       <Unit2>
-        <Filename Value="RouteCriteriaTests.pas"/>
+        <Filename Value="..\main\rsGlobal.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit2>
       <Unit3>
-        <Filename Value="TestTFPGMap.pas"/>
+        <Filename Value="..\main\djRestfulComponent.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit3>
+      <Unit4>
+        <Filename Value="..\main\rsConfiguration.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit4>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -65,7 +68,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir);..\..\..\indy-10.6\Lib\Core;C:\Delphi\indy-10.6\Lib\Core\"/>
-      <OtherUnitFiles Value="..\..\source;..\..\source\optional;..\common;..\..\..\slf4p\src\main;..\..\..\indy-10.6\Lib\Core;..\..\..\indy-10.6\Lib\Protocols;..\..\..\indy-10.6\Lib\System;C:\Delphi\indy-10.6\Lib\Core\;C:\Delphi\indy-10.6\Lib\Protocols\;C:\Delphi\indy-10.6\Lib\System\"/>
+      <OtherUnitFiles Value="..\..\source;..\..\source\optional;..\common;..\..\..\slf4p\src\main;..\..\..\indy-10.6\Lib\Core;..\..\..\indy-10.6\Lib\Protocols;..\..\..\indy-10.6\Lib\System;C:\Delphi\indy-10.6\Lib\Core\;C:\Delphi\indy-10.6\Lib\Protocols\;C:\Delphi\indy-10.6\Lib\System\;..\..\..\daraja-framework\source;..\main"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Parsing>

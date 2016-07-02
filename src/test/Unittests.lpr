@@ -44,20 +44,18 @@ uses
 {$ENDIF}
   Forms,
   Interfaces,
-  // djRestfulComponent in '..\main\djRestfulComponent.pas',
-  // rsConfiguration in '..\main\rsConfiguration.pas',
+  djRestfulComponent in '..\main\djRestfulComponent.pas',
+  rsConfiguration in '..\main\rsConfiguration.pas',
+  rsGlobal in '..\main\rsGlobal.pas',
+  rsInterfaces in '..\main\rsInterfaces.pas',
   rsRoute in '..\main\rsRoute.pas',
   rsRouteCriteria in '..\main\rsRouteCriteria.pas',
   rsRouteMappings in '..\main\rsRouteMappings.pas',
-  RouteTests,
-  RouteCriteriaTests,
-  // TestRestful in 'TestRestful.pas',
-
+  TestRestful in 'TestRestful.pas',
   testregistry,
   fpcunit,
   GuiTestRunner,
-//fpcunittestrunner,
-  consoletestrunner, TestTFPGMap;
+  consoletestrunner;
 
 {$R *.res}
 
@@ -77,10 +75,7 @@ begin
   {$ENDIF DARAJA_LOGGING}
 
   Tests := TTestSuite.Create('restful');
-  Tests.AddTest(TTestSuite.Create(TRouteTests));
-  Tests.AddTest(TTestSuite.Create(TRouteCriteriaTests));
-  Tests.AddTest(TTestSuite.Create(TCriteriaComparerTests));
-
+  Tests.AddTest(TTestSuite.Create(TRestfulTests));
 
   RegisterTest('', Tests);
 

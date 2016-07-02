@@ -137,9 +137,12 @@ function TrsRouteCriteria.NormalizedPath: string;
 var
   SL: TStrings;
   S: string;
+  I: Integer;
 begin
   if Pos('{', Path) = 0 then
     Exit(Path);
+
+  Result := '';
 
   // replace all {param} occurences with {p}
   SL := TStringList.Create;
@@ -147,8 +150,9 @@ begin
     SL.StrictDelimiter := True;
     SL.Delimiter := '/';
     SL.DelimitedText := Path;
-    for S in SL do
+    for I := 0 to SL.Count - 1 do
     begin
+      S := SL[I];
       if Pos('{', S) = 1 then
       begin
         Result := Result + '{p}/';

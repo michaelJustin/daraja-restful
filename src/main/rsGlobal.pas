@@ -39,10 +39,12 @@ type
   TRequest = TIdHTTPRequestInfo;
   TResponse = TIdHTTPResponseInfo;
 
-  TRouteProc = reference
-    to procedure(Request: TRequest; Response: TResponse);
-  // TRouteProc = procedure(Request: TRequest; Response: TResponse) of object;
-
+  {$IFDEF FPC}
+  TRouteProc = procedure(Request: TRequest; Response: TResponse) of object;
+  {$ELSE}
+  TRouteProc = reference to
+    procedure(Request: TRequest; Response: TResponse);
+  {$ENDIF}
 implementation
 
 end.

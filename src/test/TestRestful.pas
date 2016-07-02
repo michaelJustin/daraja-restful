@@ -29,7 +29,7 @@ unit TestRestful;
 interface
 
 uses
-  TestFramework;
+  {$IFDEF FPC}fpcunit,testregistry{$ELSE}TestFramework{$ENDIF};
 
 type
   TRestfulTests = class(TTestCase)
@@ -88,10 +88,14 @@ begin
   &Path('/files');
   &Path('{param}');
   GET
-    (procedure(Request: TRequest; Response: TResponse)
+  {$IFDEF FPC}
+  (MyGet);
+  {$ELSE}
+  (procedure(Request: TRequest; Response: TResponse)
     begin
 
     end);
+   {$ENDIF}
 end;
 
 procedure TGetRestful.MyGet(Request: TRequest; Response: TResponse);
@@ -108,6 +112,9 @@ begin
   &Path('/files');
   &Path('{param}');
   PATCH
+  {$IFDEF FPC}
+  (MyPatch);
+  {$ELSE}
     (procedure(Request: TRequest; Response: TResponse)
     begin
        // see http://tools.ietf.org/html/rfc5789#section-2.1
@@ -116,6 +123,7 @@ begin
        Response.Location := Request.Document;
        Response.ETag := 'e0023aa4f';
     end);
+  {$ENDIF}
 end;
 
 procedure TPatchRestful.MyPatch(Request: TRequest; Response: TResponse);
@@ -134,10 +142,14 @@ begin
   &Path('/');
   &Path('testoptions');
   OPTIONS
+  {$IFDEF FPC}
+  (MyOptions);
+  {$ELSE}
     (procedure(Request: TRequest; Response: TResponse)
     begin
       Response.CustomHeaders.AddValue('Allow', 'OPTIONS');
     end);
+  {$ENDIF}
 end;
 
 procedure TOptionsRestful.MyOptions(Request: TRequest; Response: TResponse);
