@@ -52,6 +52,8 @@ type
     function GetPath: string;
     function GetProduces: string;
 
+    class function PathMatches(const Left, Right: string): Boolean;
+
   public
     constructor Create(APath: string); overload;
     constructor Create(APath: string; AConsumes: string); overload;
@@ -65,21 +67,10 @@ type
     property Produces: string read GetProduces;
     property Consumes: string read GetConsumes;
 
-    class function Matches(const Left, Right: IRouteCriteria): Boolean;
-  end;
-
-  (**
-   * Criteria comparer.
-   *)
-  TrsCriteriaComparer = class(TInterfacedObject, IEqualityComparer<TrsRouteCriteria>)
-  public
-    class function PathMatches(const Left, Right: string): Boolean;
-
     class function PathParams(const Left, Right: string;
       const Params: TStrings): Boolean;
+    class function Matches(const Left, Right: IRouteCriteria): Boolean;
 
-    function Equals(const Left, Right: TrsRouteCriteria): Boolean; reintroduce;
-    function GetHashCode(const Value: TrsRouteCriteria): Integer; reintroduce;
   end;
 
 implementation
@@ -138,7 +129,7 @@ end;
 
 class function TrsRouteCriteria.Matches(const Left, Right: IRouteCriteria): Boolean;
 begin
-  Result := TrsCriteriaComparer.PathMatches(Left.Path, Right.Path)
+  Result := PathMatches(Left.Path, Right.Path)
     and ((Left.Consumes = '') or (Left.Consumes = Right.Consumes))
     and ((Left.Produces = '') or (Pos(Left.Produces, Right.Produces) > 0))
 end;
@@ -185,19 +176,7 @@ begin
   end;
 end;
 
-{ TCriteriaComparer }
-
-function TrsCriteriaComparer.Equals(const Left, Right: TrsRouteCriteria): Boolean;
-begin
-  Result := Left.Equals(Right);
-end;
-
-function TrsCriteriaComparer.GetHashCode(const Value: TrsRouteCriteria): Integer;
-begin
-  Result := SlashCount(Value.Path); // TODO BobJenkinsHash(Value);
-end;
-
-class function TrsCriteriaComparer.PathMatches(const Left,
+class function TrsRouteCriteria.PathMatches(const Left,
   Right: string): Boolean;
 begin
   if (Left = Right) then
@@ -215,7 +194,7 @@ begin
   Exit(True);
 end;
 
-class function TrsCriteriaComparer.PathParams(const Left,
+class function TrsRouteCriteria.PathParams(const Left,
   Right: string; const Params: TStrings): Boolean;
 var
   SLL, SLR: TStrings;

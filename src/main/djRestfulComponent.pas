@@ -221,7 +221,7 @@ begin
 
   SL := TStringList.Create;
   try
-    TrsCriteriaComparer.PathParams(Route.Path, RequestPath, SL);
+    TrsRouteCriteria.PathParams(Route.Path, RequestPath, SL);
 
     for S in SL do
     begin
