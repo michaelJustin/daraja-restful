@@ -179,7 +179,7 @@ end;
 
 procedure TRestfulTests.TestTrsRouteCriteria;
 var
-  RC: IRouteCriteria;
+  RC, RC2: IRouteCriteria;
 begin
   RC := TrsRouteCriteria.Create('path', 'consumes', 'produces');
 
@@ -189,12 +189,14 @@ begin
   CheckEquals('produces', RC.Produces);
 
 
-  RC := TrsRouteCriteria.Create('{param1}/{param2}', 'consumes', 'produces');
+  RC2 := TrsRouteCriteria.Create('{param1}/{param2}', 'consumes', 'produces');
 
-  CheckEquals('{p}/{p}/', RC.NormalizedPath);
-  CheckEquals('{param1}/{param2}', RC.Path);
-  CheckEquals('consumes', RC.Consumes);
-  CheckEquals('produces', RC.Produces);
+  CheckEquals('{p}/{p}/', RC2.NormalizedPath);
+  CheckEquals('{param1}/{param2}', RC2.Path);
+  CheckEquals('consumes', RC2.Consumes);
+  CheckEquals('produces', RC2.Produces);
+
+  CheckFalse(TrsRouteCriteria.Matches(RC, RC2));
 end;
 
 end.

@@ -65,7 +65,7 @@ type
     property Produces: string read GetProduces;
     property Consumes: string read GetConsumes;
 
-    class function Matches(const Left, Right: TrsRouteCriteria): Boolean;
+    class function Matches(const Left, Right: IRouteCriteria): Boolean;
   end;
 
   (**
@@ -136,7 +136,7 @@ begin
   Result := FProduces;
 end;
 
-class function TrsRouteCriteria.Matches(const Left, Right: TrsRouteCriteria): Boolean;
+class function TrsRouteCriteria.Matches(const Left, Right: IRouteCriteria): Boolean;
 begin
   Result := TrsCriteriaComparer.PathMatches(Left.Path, Right.Path)
     and ((Left.Consumes = '') or (Left.Consumes = Right.Consumes))
