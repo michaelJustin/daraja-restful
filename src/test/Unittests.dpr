@@ -29,10 +29,8 @@ program Unittests;
 {$APPTYPE CONSOLE}
 
 uses
-  {$IFDEF DARAJA_LOGGING}
   djLogAPI,
   djLogOverSimpleLogger,
-  {$ENDIF}
   djRestfulComponent in '..\main\djRestfulComponent.pas',
   rsConfiguration in '..\main\rsConfiguration.pas',
   rsRoute in '..\main\rsRoute.pas',
@@ -42,7 +40,8 @@ uses
   TestFramework,
   GUITestRunner,
   TextTestRunner,
-  SysUtils;
+  SysUtils,
+  rsInterfaces in '..\main\rsInterfaces.pas';
 
 begin
   RegisterTests('', [TRestfulTests.Suite]);
