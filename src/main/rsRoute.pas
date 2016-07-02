@@ -35,20 +35,13 @@ unit rsRoute;
 interface
 
 uses
-  rsInterfaces,
+  rsInterfaces, rsGlobal,
   {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
   {$ENDIF DARAJA_LOGGING}
-  IdCustomHTTPServer,
   SysUtils;
 
 type
-  TRequest = TIdHTTPRequestInfo;
-  TResponse = TIdHTTPResponseInfo;
-
-  TRouteProc = reference
-    to procedure(Request: TRequest; Response: TResponse);
-
   (**
    * Route.
    *)
@@ -57,11 +50,13 @@ type
     FPath: string;
     FHandler: TRouteProc;
     function GetPath: string;
+    function GetHandler: TRouteProc;
   public
     constructor Create(Path: string; Handler: TRouteProc);
+    destructor Destroy; override;
 
     property Path: string read GetPath;
-    property Handler: TRouteProc read FHandler;
+    property Handler: TRouteProc read GetHandler;
   end;
 
 implementation
@@ -72,6 +67,17 @@ constructor TrsRoute.Create(Path: string; Handler: TRouteProc);
 begin
   FPath := Path;
   FHandler := Handler;
+end;
+
+destructor TrsRoute.Destroy;
+begin
+
+  inherited;
+end;
+
+function TrsRoute.GetHandler: TRouteProc;
+begin
+  Result := FHandler;
 end;
 
 function TrsRoute.GetPath: string;

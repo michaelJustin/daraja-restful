@@ -39,6 +39,7 @@ uses
   rsRouteMappings,
   rsRouteCriteria,
   rsConfiguration,
+  rsGlobal,
   {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLogOverSimpleLogger,
   {$ENDIF}

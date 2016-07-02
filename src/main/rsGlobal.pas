@@ -28,56 +28,23 @@
 
 // this is unsupported demonstration code
 
-unit rsInterfaces;
+unit rsGlobal;
 
 interface
 
 uses
-  rsGlobal,
-  Classes;
+  IdCustomHTTPServer;
 
 type
-  IContextConfiguration = interface
-    ['{8D12A5C0-4C91-4A9E-BB14-3030CAFC8286}']
-  end;
+  TRequest = TIdHTTPRequestInfo;
+  TResponse = TIdHTTPResponseInfo;
 
-  IRoute = interface
-    ['{7543E346-D614-45B9-97A0-84855F1889D0}']
-
-    function GetPath: string;
-    function GetHandler: TRouteProc;
-
-    property Path: string read GetPath;
-    property Handler: TRouteProc read GetHandler;
-  end;
-
-  IRouteCriteria = interface
-    ['{4BC918E8-D0D5-4997-B1A0-DD1104E4046F}']
-
-    function NormalizedPath: string;
-
-    function GetConsumes: string;
-    function GetPath: string;
-    function GetProduces: string;
-
-    property Path: string read GetPath;
-    property Produces: string read GetProduces;
-    property Consumes: string read GetConsumes;
-  end;
-
-  IRouteMappings = interface
-    ['{0579F025-A69E-4104-BED9-0D5ED1F43523}']
-
-    function ContainsKey(const ACriteria: IRouteCriteria): Boolean;
-  end;
-
-  IMethodMappings = interface
-    ['{1F68D9B7-7A58-4F72-9DD7-D1B2767A16C1}']
-
-    function ContainsKey(Key: string): Boolean;
-    function Methods: TStrings;
-  end;
-
+  {$IFDEF FPC}
+  TRouteProc = procedure(Request: TRequest; Response: TResponse) of object;
+  {$ELSE}
+  TRouteProc = reference to
+    procedure(Request: TRequest; Response: TResponse);
+  {$ENDIF}
 implementation
 
 end.

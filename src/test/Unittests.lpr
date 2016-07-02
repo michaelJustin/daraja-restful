@@ -42,22 +42,9 @@ uses
 {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLogOverSimpleLogger, SimpleLogger,
 {$ENDIF}
-  Forms,
-  Interfaces,
-  // djRestfulComponent in '..\main\djRestfulComponent.pas',
-  // rsConfiguration in '..\main\rsConfiguration.pas',
-  rsRoute in '..\main\rsRoute.pas',
-  rsRouteCriteria in '..\main\rsRouteCriteria.pas',
-  rsRouteMappings in '..\main\rsRouteMappings.pas',
-  RouteTests,
-  RouteCriteriaTests,
-  // TestRestful in 'TestRestful.pas',
-
-  testregistry,
-  fpcunit,
-  GuiTestRunner,
-//fpcunittestrunner,
-  consoletestrunner, TestTFPGMap;
+  Forms, Interfaces, djRestfulComponent, rsConfiguration, rsGlobal,
+  rsInterfaces, rsRoute, rsRouteCriteria, rsRouteMappings, TestRestful,
+  testregistry, fpcunit, GuiTestRunner, consoletestrunner;
 
 {$R *.res}
 
@@ -77,10 +64,7 @@ begin
   {$ENDIF DARAJA_LOGGING}
 
   Tests := TTestSuite.Create('restful');
-  Tests.AddTest(TTestSuite.Create(TRouteTests));
-  Tests.AddTest(TTestSuite.Create(TRouteCriteriaTests));
-  Tests.AddTest(TTestSuite.Create(TCriteriaComparerTests));
-
+  Tests.AddTest(TTestSuite.Create(TRestfulTests));
 
   RegisterTest('', Tests);
 

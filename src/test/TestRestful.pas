@@ -29,38 +29,83 @@ unit TestRestful;
 interface
 
 uses
-  TestFramework;
+  {$IFDEF FPC}fpcunit,testregistry{$ELSE}TestFramework{$ENDIF},
+  rsGlobal;
 
 type
+  { TRestfulTests }
+
   TRestfulTests = class(TTestCase)
   private
+    procedure MyTestProc(Request: TRequest; Response: TResponse);
 
   published
-    // check PATCH method -------------------------------------------------
+    procedure TestGET;
+
     procedure TestPATCH;
 
-    // Test the OPTIONS HTTP method
     procedure TestOPTIONS;
+
+    procedure TestTrsRoute;
+
+    procedure TestTrsRouteCriteria;
+
+    procedure TestTrsRouteMappings;
   end;
 
 implementation
 
 uses
+  rsConfiguration, rsRoute, rsRouteCriteria, rsRouteMappings,
+  rsInterfaces,
   djRestfulComponent, djInterfaces, djServer, djWebAppContext,
-  rsConfiguration, rsRoute,
   IdHTTP, Classes;
 
 type
+  TGetRestful = class(TdjRestfulComponent)
+  private
+    procedure MyGet(Request: TRequest; Response: TResponse);
+  public
+    procedure Init(const Config: IWebComponentConfig); override;
+  end;
+
   TPatchRestful = class(TdjRestfulComponent)
+  private
+    procedure MyPatch(Request: TRequest; Response: TResponse);
   public
     procedure Init(const Config: IWebComponentConfig); override;
   end;
 
   TOptionsRestful = class(TdjRestfulComponent)
+  private
+    procedure MyOptions(Request: TRequest; Response: TResponse);
   public
     procedure Init(const Config: IWebComponentConfig); override;
   end;
 
+{ TGetRestful }
+
+procedure TGetRestful.Init(const Config: IWebComponentConfig);
+begin
+  inherited;
+
+  &Path('/files');
+  &Path('{param}');
+  GET
+  {$IFDEF FPC}
+  (MyGet);
+  {$ELSE}
+  (procedure(Request: TRequest; Response: TResponse)
+    begin
+
+    end);
+   {$ENDIF}
+end;
+
+procedure TGetRestful.MyGet(Request: TRequest; Response: TResponse);
+begin
+  //
+end;
 
 { TPatchRestful }
 
@@ -71,6 +116,9 @@ begin
   &Path('/files');
   &Path('{param}');
   PATCH
+  {$IFDEF FPC}
+  (MyPatch);
+  {$ELSE}
     (procedure(Request: TRequest; Response: TResponse)
     begin
        // see http://tools.ietf.org/html/rfc5789#section-2.1
@@ -79,6 +127,14 @@ begin
        Response.Location := Request.Document;
        Response.ETag := 'e0023aa4f';
     end);
+  {$ENDIF}
+end;
+
+procedure TPatchRestful.MyPatch(Request: TRequest; Response: TResponse);
+begin
+  Response.ResponseNo := 204;
+  Response.Location := Request.Document;
+  Response.ETag := 'e0023aa4f';
 end;
 
 { TOptionsRestful }
@@ -90,13 +146,56 @@ begin
   &Path('/');
   &Path('testoptions');
   OPTIONS
+  {$IFDEF FPC}
+  (MyOptions);
+  {$ELSE}
     (procedure(Request: TRequest; Response: TResponse)
     begin
       Response.CustomHeaders.AddValue('Allow', 'OPTIONS');
     end);
+  {$ENDIF}
+end;
+
+procedure TOptionsRestful.MyOptions(Request: TRequest; Response: TResponse);
+begin
+  Response.CustomHeaders.AddValue('Allow', 'OPTIONS');
 end;
 
 { TRestfulTests }
+
+procedure TRestfulTests.TestGET;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+  HTTP: TIdHTTP;
+  PatchStream: TStream;
+begin
+  Server := TdjServer.Create;
+  try
+    // add a context handler for http://127.0.0.1/
+    Context := TdjWebAppContext.Create('');
+    // add the RESTful component at http://127.0.0.1/rest/*
+    Context.Add(TGetRestful, '/rest/*');
+
+    Server.Add(Context);
+    Server.Start;
+
+    PatchStream := TStringStream.Create('<patch>example GET content</patch>');
+    try
+      HTTP := TIdHTTP.Create;
+      try
+        HTTP.Get('http://127.0.0.1/rest/files/get.txt', PatchStream);
+        CheckEquals(200, HTTP.ResponseCode);
+      finally
+        HTTP.Free;
+      end;
+    finally
+      PatchStream.Free;
+    end;
+  finally
+    Server.Free;
+  end;
+end;
 
 procedure TRestfulTests.TestPATCH;
 var
@@ -164,5 +263,74 @@ begin
   end;
 end;
 
+procedure TRestfulTests.TestTrsRoute;
+var
+  Route: IRoute;
+begin
+  Route := TrsRoute.Create('path',
+  {$IFDEF FPC}
+  MyTestProc);
+  {$ELSE}
+  procedure(Req: TRequest; Res: TResponse) begin end);
+  {$ENDIF}
+
+  CheckEquals('path', Route.Path);
+end;
+
+procedure TRestfulTests.MyTestProc(Request: TRequest; Response: TResponse);
+begin
+
+end;
+
+procedure TRestfulTests.TestTrsRouteCriteria;
+var
+  RC, RC2: IRouteCriteria;
+begin
+  RC := TrsRouteCriteria.Create('path', 'consumes', 'produces');
+
+  CheckEquals('path', RC.NormalizedPath);
+  CheckEquals('path', RC.Path);
+  CheckEquals('consumes', RC.Consumes);
+  CheckEquals('produces', RC.Produces);
+
+
+  RC2 := TrsRouteCriteria.Create('{param1}/{param2}', 'consumes', 'produces');
+
+  CheckEquals('{p}/{p}/', RC2.NormalizedPath);
+  CheckEquals('{param1}/{param2}', RC2.Path);
+  CheckEquals('consumes', RC2.Consumes);
+  CheckEquals('produces', RC2.Produces);
+
+  CheckFalse(TrsRouteCriteria.Matches(RC, RC2));
+end;
+
+procedure TRestfulTests.TestTrsRouteMappings;
+var
+  RM: TrsRouteMappings;
+  RC: IRouteCriteria;
+  Route: TRsRoute;
+begin
+  RM := TrsRouteMappings.Create;
+
+  try
+    RC := TrsRouteCriteria.Create('path', 'consumes', 'produces');
+
+    CheckFalse(RM.ContainsKey(RC));
+
+    Route := TrsRoute.Create('path',
+    {$IFDEF FPC}
+    MyTestProc);
+    {$ELSE}
+    procedure(Req: TRequest; Res: TResponse) begin end);
+    {$ENDIF}
+
+    RM.Add(RC, Route);
+
+    CheckTrue(RM.ContainsKey(RC));
+  finally
+    RM.Free;
+  end;
+
+end;
 
 end.

@@ -48,7 +48,7 @@ type
 implementation
 
 uses
-  rsRoute, CRUDModuleUnit, SysUtils;
+  rsRoute, rsGlobal, CRUDModuleUnit, SysUtils;
 
 { TMyRestfulComponent }
 
