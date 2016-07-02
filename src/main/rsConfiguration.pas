@@ -223,9 +223,7 @@ procedure TrsConfiguration.AddMapping(Method: string; Route: TrsRoute);
 var
   C: TrsRouteCriteria;
 begin
-  C := TrsRouteCriteria.Create(Route.Path);
-  C.Produces := NextProduces;
-  C.Consumes := NextConsumes;
+  C := TrsRouteCriteria.Create(Route.Path, NextConsumes, NextProduces);
 
   AddMapping(Method, C, Route);
 

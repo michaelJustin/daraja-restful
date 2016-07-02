@@ -44,17 +44,26 @@ type
    * Route criteria.
    *)
   TrsRouteCriteria = class(TInterfacedObject, IRouteCriteria)
-  public
-    Path: string;
-    Produces: string;
-    Consumes: string;
+  private
+    FPath: string;
+    FProduces: string;
+    FConsumes: string;
+    function GetConsumes: string;
+    function GetPath: string;
+    function GetProduces: string;
 
-    constructor Create(Path: string); overload;
-    constructor Create(Path: string; Consumes: string); overload;
+  public
+    constructor Create(APath: string); overload;
+    constructor Create(APath: string; AConsumes: string); overload;
+    constructor Create(APath: string; AConsumes: string; AProduces: string); overload;
 
     function Equals(Obj: TObject): Boolean; override;
 
     function NormalizedPath: string;
+
+    property Path: string read GetPath;
+    property Produces: string read GetProduces;
+    property Consumes: string read GetConsumes;
 
     class function Matches(const Left, Right: TrsRouteCriteria): Boolean;
   end;
@@ -77,15 +86,21 @@ implementation
 
 { TRouteCriteria }
 
-constructor TrsRouteCriteria.Create(Path: string);
+constructor TrsRouteCriteria.Create(APath: string);
 begin
-  Self.Path := Path;
+  FPath := APath;
 end;
 
-constructor TrsRouteCriteria.Create(Path, Consumes: string);
+constructor TrsRouteCriteria.Create(APath, AConsumes: string);
 begin
-  Create(Path);
-  Self.Consumes := Consumes;
+  Create(APath);
+  FConsumes := AConsumes;
+end;
+
+constructor TrsRouteCriteria.Create(APath, AConsumes, AProduces: string);
+begin
+  Create(APath, AConsumes);
+  FProduces := AProduces;
 end;
 
 function TrsRouteCriteria.Equals(Obj: TObject): Boolean;
@@ -104,6 +119,21 @@ begin
   Result := (Self.NormalizedPath = Tmp.NormalizedPath)
     and (Self.Consumes = Tmp.Consumes)
     and (Self.Produces = Tmp.Produces)
+end;
+
+function TrsRouteCriteria.GetConsumes: string;
+begin
+  Result := FConsumes;
+end;
+
+function TrsRouteCriteria.GetPath: string;
+begin
+  Result := FPath;
+end;
+
+function TrsRouteCriteria.GetProduces: string;
+begin
+  Result := FProduces;
 end;
 
 class function TrsRouteCriteria.Matches(const Left, Right: TrsRouteCriteria): Boolean;

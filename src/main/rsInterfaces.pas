@@ -50,6 +50,13 @@ type
 
     function NormalizedPath: string;
 
+    function GetConsumes: string;
+    function GetPath: string;
+    function GetProduces: string;
+
+    property Path: string read GetPath;
+    property Produces: string read GetProduces;
+    property Consumes: string read GetConsumes;
   end;
 implementation
 

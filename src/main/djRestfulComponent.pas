@@ -1,4 +1,4 @@
-(*
+﻿(*
 
     Daraja Framework
     Copyright (C) 2016  Michael Justin
@@ -284,13 +284,10 @@ begin
 
   RequestPath := Copy(RequestPath, Pos('/', RequestPath) + 1, MAXINT);
 
-  RequestRC := TrsRouteCriteria.Create(RequestPath);
+  // find a route which consumes the incoming content type
+  // and produces the requested content tpye
+  RequestRC := TrsRouteCriteria.Create(RequestPath, Request.ContentType, Request.Accept);
   try
-    // find a route which consumes the incoming content type
-    RequestRC.Consumes := Request.ContentType;
-    // and produces the requested content tpye
-    RequestRC.Produces := Request.Accept;
-
     // find the route
     Routes := RestConfig.MethodMappings(Request.Command);
     MatchingRC := Routes.FindMatch(RequestRC, Route);
