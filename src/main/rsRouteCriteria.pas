@@ -26,8 +26,6 @@
 
 *)
 
-// this is unsupported demonstration code
-
 unit rsRouteCriteria;
 
 {$i IdCompilerDefines.inc}
