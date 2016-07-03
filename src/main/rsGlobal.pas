@@ -40,6 +40,10 @@ type
   TResponse = TIdHTTPResponseInfo;
 
   {$IFDEF FPC}
+  {$DEFINE DARAJA_RESTFUL_COMPATIBLE}
+  {$ENDIF}
+
+  {$IFDEF DARAJA_RESTFUL_COMPATIBLE}
   TRouteProc = procedure(Request: TRequest; Response: TResponse) of object;
   {$ELSE}
   TRouteProc = reference to

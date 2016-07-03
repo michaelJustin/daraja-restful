@@ -28,6 +28,10 @@ unit TestRestful;
 
 interface
 
+{$IFDEF FPC}
+{$DEFINE DARAJA_RESTFUL_COMPATIBLE}
+{$ENDIF}
+
 uses
   {$IFDEF FPC}fpcunit,testregistry{$ELSE}TestFramework{$ENDIF},
   rsGlobal;
@@ -92,14 +96,14 @@ begin
   &Path('/files');
   &Path('{param}');
   GET
-  {$IFDEF FPC}
+  {$IFDEF DARAJA_RESTFUL_COMPATIBLE}
   (MyGet);
   {$ELSE}
   (procedure(Request: TRequest; Response: TResponse)
     begin
 
     end);
-   {$ENDIF}
+  {$ENDIF}
 end;
 
 procedure TGetRestful.MyGet(Request: TRequest; Response: TResponse);
@@ -116,7 +120,7 @@ begin
   &Path('/files');
   &Path('{param}');
   PATCH
-  {$IFDEF FPC}
+  {$IFDEF DARAJA_RESTFUL_COMPATIBLE}
   (MyPatch);
   {$ELSE}
     (procedure(Request: TRequest; Response: TResponse)
@@ -146,7 +150,7 @@ begin
   &Path('/');
   &Path('testoptions');
   OPTIONS
-  {$IFDEF FPC}
+  {$IFDEF DARAJA_RESTFUL_COMPATIBLE}
   (MyOptions);
   {$ELSE}
     (procedure(Request: TRequest; Response: TResponse)
@@ -268,7 +272,7 @@ var
   Route: IRoute;
 begin
   Route := TrsRoute.Create('path',
-  {$IFDEF FPC}
+  {$IFDEF DARAJA_RESTFUL_COMPATIBLE}
   MyTestProc);
   {$ELSE}
   procedure(Req: TRequest; Res: TResponse) begin end);
@@ -292,7 +296,6 @@ begin
   CheckEquals('path', RC.Path);
   CheckEquals('consumes', RC.Consumes);
   CheckEquals('produces', RC.Produces);
-
 
   RC2 := TrsRouteCriteria.Create('{param1}/{param2}', 'consumes', 'produces');
 
@@ -318,7 +321,7 @@ begin
     CheckFalse(RM.ContainsKey(RC));
 
     Route := TrsRoute.Create('path',
-    {$IFDEF FPC}
+    {$IFDEF DARAJA_RESTFUL_COMPATIBLE}
     MyTestProc);
     {$ELSE}
     procedure(Req: TRequest; Res: TResponse) begin end);

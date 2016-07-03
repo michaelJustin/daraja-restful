@@ -36,13 +36,13 @@ uses
   rsRoute in '..\main\rsRoute.pas',
   rsRouteCriteria in '..\main\rsRouteCriteria.pas',
   rsRouteMappings in '..\main\rsRouteMappings.pas',
+  rsInterfaces in '..\main\rsInterfaces.pas',
+  rsGlobal in '..\main\rsGlobal.pas',
   TestRestful in 'TestRestful.pas',
   TestFramework,
   GUITestRunner,
   TextTestRunner,
-  SysUtils,
-  rsInterfaces in '..\main\rsInterfaces.pas',
-  rsGlobal in '..\main\rsGlobal.pas';
+  SysUtils;
 
 begin
   ReportMemoryLeaksOnShutdown := True;
