@@ -74,9 +74,9 @@ type
 
     destructor Destroy; override;
 
-    procedure AddMapping(const AMethod: string; const ACriteria: IRouteCriteria; const ARoute: TrsRoute); overload;
+    procedure AddMapping(const AMethod: string; const ACriteria: IRouteCriteria; const ARoute: IRoute); overload;
 
-    procedure AddMapping(const AMethod: string; const ARoute: TrsRoute); overload;
+    procedure AddMapping(const AMethod: string; const ARoute: IRoute); overload;
 
     function MethodMappings(const AMethod: string): TrsRouteMappings;
 
@@ -223,7 +223,7 @@ begin
   end;
 end;
 
-procedure TrsConfiguration.AddMapping(const AMethod: string; const ARoute: TrsRoute);
+procedure TrsConfiguration.AddMapping(const AMethod: string; const ARoute: IRoute);
 var
   C: IRouteCriteria;
 begin
@@ -238,7 +238,7 @@ begin
 end;
 
 procedure TrsConfiguration.AddMapping(const AMethod: string;
-  const ACriteria: IRouteCriteria; const ARoute: TrsRoute);
+  const ACriteria: IRouteCriteria; const ARoute: IRoute);
 begin
   if MethodMappings(AMethod).ContainsKey(ACriteria) then
   begin
