@@ -43,7 +43,7 @@ uses
 type
   TMatchResult = record
     RouteCriteria: IRouteCriteria;
-    Route: TRsRoute;
+    Route: IRoute;
   end;
 
   (**
@@ -52,12 +52,12 @@ type
   TrsRouteMappings = class(TInterfacedObject, IRouteMappings)
   private
     FRouteCriteriaList: IInterfaceList;
-    FRouteList: TObjectList;
+    FRouteList: IInterfaceList;
   public
     constructor Create; overload;
     destructor Destroy; override;
 
-    procedure Add(const ACriteria: IRouteCriteria; const ARoute: TrsRoute);
+    procedure Add(const ACriteria: IRouteCriteria; const ARoute: IRoute);
 
     function ContainsKey(const ACriteria: IRouteCriteria): Boolean;
 
@@ -90,15 +90,16 @@ begin
   inherited;
 
   FRouteCriteriaList := TInterfaceList.Create;
-  FRouteList := TObjectList.Create(True);
+  FRouteList := TInterfaceList.Create;
 end;
 
 destructor TrsRouteMappings.Destroy;
 begin
-  FRouteList.Free;
+  // FRouteList.Free;
+  inherited;
 end;
 
-procedure TrsRouteMappings.Add(const ACriteria: IRouteCriteria; const ARoute: TrsRoute);
+procedure TrsRouteMappings.Add(const ACriteria: IRouteCriteria; const ARoute: IRoute);
 begin
   Assert(Assigned(FRouteCriteriaList));
   Assert(Assigned(ACriteria));
@@ -126,7 +127,7 @@ begin
     // Log(Format('Comparing %s %s', [C.Path + C.Produces, MatchingRC.Path + MatchingRC.Produces]));
     if TrsRouteCriteria.Matches(MatchingRC, ACriteria) then
     begin
-      Result.Route := FRouteList[I] as TrsRoute;
+      Result.Route := FRouteList[I] as IRoute;
       Result.RouteCriteria := MatchingRC;
       Break;
     end;

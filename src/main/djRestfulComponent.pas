@@ -57,13 +57,13 @@ type
 
     procedure Trace(const S: string);
 
-    procedure DELETE(Route: TrsRoute); overload;
-    procedure GET(Route: TrsRoute); overload;
-    procedure HEAD(Route: TrsRoute); overload;
-    procedure PATCH(Route: TrsRoute); overload;
-    procedure POST(Route: TrsRoute); overload;
-    procedure PUT(Route: TrsRoute); overload;
-    procedure OPTIONS(Route: TrsRoute); overload;
+    procedure DELETE(const Route: IRoute); overload;
+    procedure GET(const Route: IRoute); overload;
+    procedure HEAD(const Route: IRoute); overload;
+    procedure PATCH(const Route: IRoute); overload;
+    procedure POST(const Route: IRoute); overload;
+    procedure PUT(const Route: IRoute); overload;
+    procedure OPTIONS(const Route: IRoute); overload;
 
   protected
     procedure SendError(AResponseInfo: TIdHTTPResponseInfo; Error:
@@ -333,7 +333,7 @@ begin
   RestConfig.SetPath(Path);
 end;
 
-procedure TdjRestfulComponent.GET(Route: TrsRoute);
+procedure TdjRestfulComponent.GET(const Route: IRoute);
 begin
   RestConfig.AddMapping('GET', Route);
 end;
@@ -344,7 +344,7 @@ begin
   RestConfig.ClearNextPath;
 end;
 
-procedure TdjRestfulComponent.POST(Route: TrsRoute);
+procedure TdjRestfulComponent.POST(const Route: IRoute);
 begin
   RestConfig.AddMapping('POST', Route);
 end;
@@ -355,7 +355,7 @@ begin
   RestConfig.ClearNextPath;
 end;
 
-procedure TdjRestfulComponent.DELETE(Route: TrsRoute);
+procedure TdjRestfulComponent.DELETE(const Route: IRoute);
 begin
   RestConfig.AddMapping('DELETE', Route);
 end;
@@ -366,7 +366,7 @@ begin
   RestConfig.ClearNextPath;
 end;
 
-procedure TdjRestfulComponent.PUT(Route: TrsRoute);
+procedure TdjRestfulComponent.PUT(const Route: IRoute);
 begin
   RestConfig.AddMapping('PUT', Route);
 end;
@@ -377,7 +377,7 @@ begin
   RestConfig.ClearNextPath;
 end;
 
-procedure TdjRestfulComponent.HEAD(Route: TrsRoute);
+procedure TdjRestfulComponent.HEAD(const Route: IRoute);
 begin
   RestConfig.AddMapping('HEAD', Route);
 end;
@@ -388,7 +388,7 @@ begin
   RestConfig.ClearNextPath;
 end;
 
-procedure TdjRestfulComponent.PATCH(Route: TrsRoute);
+procedure TdjRestfulComponent.PATCH(const Route: IRoute);
 begin
   RestConfig.AddMapping('PATCH', Route);
 end;
@@ -399,7 +399,7 @@ begin
   RestConfig.ClearNextPath;
 end;
 
-procedure TdjRestfulComponent.OPTIONS(Route: TrsRoute);
+procedure TdjRestfulComponent.OPTIONS(const Route: IRoute);
 begin
   RestConfig.AddMapping('OPTIONS', Route);
 end;
