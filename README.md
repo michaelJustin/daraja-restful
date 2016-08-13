@@ -9,7 +9,7 @@ Here is a short example, it registers a request handler at path hello which hand
        &Path('hello');
        &Produces('text/html');
        GET
-        (procedure(Request: TRequest; Response: TResponse)
+        (procedure(Request: TdjRequest; Response: TdjResponse)
          begin
            Response.ContentText := '<html>Hello world!</html>';
          end);
@@ -21,7 +21,7 @@ The framework supports path parameters, so that http://mydomain.local/myapp/orde
        &Path('orders/{orderId}')
        &Produces('text/html');       
        GET
-        (procedure(Request: TRequest; Response: TResponse)
+        (procedure(Request: TdjRequest; Response: TdjResponse)
          begin
            Response.ContentText :=
              Format('<html>Thank you for your order %s</html>',
@@ -35,7 +35,7 @@ If a resource has more than one representation (HTML, XML or JSON), this can be 
        // respond to HTML browsers
        &Path('myresource');
        &Produces('text/html');
-       GET(procedure(Request: TRequest; Response: TResponse)
+       GET(procedure(Request: TdjRequest; Response: TdjResponse)
            begin
              Response.ContentText :=
                '<html>Hello world!</html>';
@@ -44,7 +44,7 @@ If a resource has more than one representation (HTML, XML or JSON), this can be 
        // respond to XML client
        &Path('myresource');
        &Produces('application/xml');
-       GET(procedure(Request: TRequest; Response: TResponse)
+       GET(procedure(Request: TdjRequest; Response: TdjResponse)
            begin
              Response.ContentText := '<xml>Hello world!</xml>';
              Response.CharSet := 'utf-8';
@@ -53,7 +53,7 @@ If a resource has more than one representation (HTML, XML or JSON), this can be 
        // respond to JSON client
        &Path('myresource');
        &Produces('application/json');
-       GET(procedure(Request: TRequest; Response: TResponse)
+       GET(procedure(Request: TdjRequest; Response: TdjResponse)
            begin
              Response.ContentText := '{"msg":"Hello world!"}';
              Response.CharSet := 'utf-8';
