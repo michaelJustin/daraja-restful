@@ -34,14 +34,14 @@ interface
 
 uses
   {$IFDEF FPC}fpcunit,testregistry{$ELSE}TestFramework{$ENDIF},
-  rsGlobal;
+  rsGlobal, djTypes;
 
 type
   { TRestfulTests }
 
   TRestfulTests = class(TTestCase)
   private
-    procedure MyTestProc(Request: TRequest; Response: TResponse);
+    procedure MyTestProc(Request: TdjRequest; Response: TdjResponse);
 
   published
     procedure TestGET;
@@ -68,21 +68,21 @@ uses
 type
   TGetRestful = class(TdjRestfulComponent)
   private
-    procedure MyGet(Request: TRequest; Response: TResponse);
+    procedure MyGet(Request: TdjRequest; Response: TdjResponse);
   public
     procedure Init(const Config: IWebComponentConfig); override;
   end;
 
   TPatchRestful = class(TdjRestfulComponent)
   private
-    procedure MyPatch(Request: TRequest; Response: TResponse);
+    procedure MyPatch(Request: TdjRequest; Response: TdjResponse);
   public
     procedure Init(const Config: IWebComponentConfig); override;
   end;
 
   TOptionsRestful = class(TdjRestfulComponent)
   private
-    procedure MyOptions(Request: TRequest; Response: TResponse);
+    procedure MyOptions(Request: TdjRequest; Response: TdjResponse);
   public
     procedure Init(const Config: IWebComponentConfig); override;
   end;
@@ -99,14 +99,14 @@ begin
   {$IFDEF DARAJA_RESTFUL_COMPATIBLE}
   (MyGet);
   {$ELSE}
-  (procedure(Request: TRequest; Response: TResponse)
+  (procedure(Request: TdjRequest; Response: TdjResponse)
     begin
 
     end);
   {$ENDIF}
 end;
 
-procedure TGetRestful.MyGet(Request: TRequest; Response: TResponse);
+procedure TGetRestful.MyGet(Request: TdjRequest; Response: TdjResponse);
 begin
   //
 end;
@@ -123,7 +123,7 @@ begin
   {$IFDEF DARAJA_RESTFUL_COMPATIBLE}
   (MyPatch);
   {$ELSE}
-    (procedure(Request: TRequest; Response: TResponse)
+    (procedure(Request: TdjRequest; Response: TdjResponse)
     begin
        // see http://tools.ietf.org/html/rfc5789#section-2.1
        // no response body
@@ -134,7 +134,7 @@ begin
   {$ENDIF}
 end;
 
-procedure TPatchRestful.MyPatch(Request: TRequest; Response: TResponse);
+procedure TPatchRestful.MyPatch(Request: TdjRequest; Response: TdjResponse);
 begin
   Response.ResponseNo := 204;
   Response.Location := Request.Document;
@@ -153,14 +153,14 @@ begin
   {$IFDEF DARAJA_RESTFUL_COMPATIBLE}
   (MyOptions);
   {$ELSE}
-    (procedure(Request: TRequest; Response: TResponse)
+    (procedure(Request: TdjRequest; Response: TdjResponse)
     begin
       Response.CustomHeaders.AddValue('Allow', 'OPTIONS');
     end);
   {$ENDIF}
 end;
 
-procedure TOptionsRestful.MyOptions(Request: TRequest; Response: TResponse);
+procedure TOptionsRestful.MyOptions(Request: TdjRequest; Response: TdjResponse);
 begin
   Response.CustomHeaders.AddValue('Allow', 'OPTIONS');
 end;
@@ -275,13 +275,13 @@ begin
   {$IFDEF DARAJA_RESTFUL_COMPATIBLE}
   MyTestProc);
   {$ELSE}
-  procedure(Req: TRequest; Res: TResponse) begin end);
+  procedure(Req: TdjRequest; Res: TdjResponse) begin end);
   {$ENDIF}
 
   CheckEquals('path', Route.Path);
 end;
 
-procedure TRestfulTests.MyTestProc(Request: TRequest; Response: TResponse);
+procedure TRestfulTests.MyTestProc(Request: TdjRequest; Response: TdjResponse);
 begin
 
 end;
@@ -324,7 +324,7 @@ begin
     {$IFDEF DARAJA_RESTFUL_COMPATIBLE}
     MyTestProc);
     {$ELSE}
-    procedure(Req: TRequest; Res: TResponse) begin end);
+    procedure(Req: TdjRequest; Res: TdjResponse) begin end);
     {$ENDIF}
 
     RM.Add(RC, Route);
