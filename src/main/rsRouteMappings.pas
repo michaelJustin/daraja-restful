@@ -71,13 +71,13 @@ type
     constructor Create; overload;
     destructor Destroy; override;
 
-    procedure Add(Key: string; Value: TrsRouteMappings);
+    procedure Add(const Key: string; Value: TrsRouteMappings);
 
-    function ContainsKey(Key: string): Boolean;
+    function ContainsKey(const Key: string): Boolean;
 
     function Methods: TStrings;
 
-    function Mapping(Index: string): TrsRouteMappings;
+    function Mapping(const Index: string): TrsRouteMappings;
 
   end;
 
@@ -136,12 +136,12 @@ end;
 
 { TrsMethodMappings }
 
-procedure TrsMethodMappings.Add(Key: string; Value: TrsRouteMappings);
+procedure TrsMethodMappings.Add(const Key: string; Value: TrsRouteMappings);
 begin
   FMappings.AddObject(Key, Value);
 end;
 
-function TrsMethodMappings.ContainsKey(Key: string): Boolean;
+function TrsMethodMappings.ContainsKey(const Key: string): Boolean;
 begin
   Result := FMappings.IndexOf(Key) > -1;
 end;
@@ -164,7 +164,7 @@ begin
   inherited;
 end;
 
-function TrsMethodMappings.Mapping(Index: string): TrsRouteMappings;
+function TrsMethodMappings.Mapping(const Index: string): TrsRouteMappings;
 begin
   Result := FMappings.Objects[FMappings.IndexOf(Index)] as TrsRouteMappings;
 end;

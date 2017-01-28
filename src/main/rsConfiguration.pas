@@ -104,7 +104,7 @@ implementation
 uses
   Classes;
 
-procedure Log(Msg: string);
+procedure Log(const Msg: string);
 begin
   {$IFNDEF DARAJA_LOGGING}
   if IsConsole then

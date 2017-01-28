@@ -72,7 +72,7 @@ type
   IMethodMappings = interface
     ['{1F68D9B7-7A58-4F72-9DD7-D1B2767A16C1}']
 
-    function ContainsKey(Key: string): Boolean;
+    function ContainsKey(const Key: string): Boolean;
     function Methods: TStrings;
   end;
 

@@ -52,9 +52,9 @@ type
     class function PathMatches(const Left, Right: string): Boolean;
 
   public
-    constructor Create(APath: string); overload;
-    constructor Create(APath: string; AConsumes: string); overload;
-    constructor Create(APath: string; AConsumes: string; AProduces: string); overload;
+    constructor Create(const APath: string); overload;
+    constructor Create(const APath, AConsumes: string); overload;
+    constructor Create(const APath, AConsumes, AProduces: string); overload;
 
     function Equals(Obj: TObject): Boolean; override;
 
@@ -74,18 +74,18 @@ implementation
 
 { TRouteCriteria }
 
-constructor TrsRouteCriteria.Create(APath: string);
+constructor TrsRouteCriteria.Create(const APath: string);
 begin
   FPath := APath;
 end;
 
-constructor TrsRouteCriteria.Create(APath, AConsumes: string);
+constructor TrsRouteCriteria.Create(const APath, AConsumes: string);
 begin
   Create(APath);
   FConsumes := AConsumes;
 end;
 
-constructor TrsRouteCriteria.Create(APath, AConsumes, AProduces: string);
+constructor TrsRouteCriteria.Create(const APath, AConsumes, AProduces: string);
 begin
   Create(APath, AConsumes);
   FProduces := AProduces;

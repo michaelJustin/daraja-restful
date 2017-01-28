@@ -34,8 +34,7 @@ interface
 
 uses
   rsRoute, rsRouteMappings, rsConfiguration, rsRouteCriteria, rsGlobal,
-  rsInterfaces,
-  djWebComponent, djServerContext, djInterfaces,
+  rsInterfaces, djWebComponent, djServerContext, djInterfaces,
 {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
 {$ENDIF DARAJA_LOGGING}
@@ -67,7 +66,7 @@ type
 
   protected
     procedure SendError(AResponseInfo: TIdHTTPResponseInfo; Error:
-      Integer; ErrorMessage: string = '');
+      Integer; const ErrorMessage: string = '');
 
     procedure AddPathParams(const RequestPath: string;
       const Route: IRoute; const ARequestInfo: TIdHTTPRequestInfo);
@@ -94,18 +93,18 @@ type
     (**
      * Sets the path to base URL + /your_path.
      *)
-    procedure &Path(Path: string);
+    procedure &Path(const Path: string);
 
     (**
      * Produces defines which MIME type is delivered
      * by a method registered with GET.
      *)
-    procedure &Produces(MediaType: string);
+    procedure &Produces(const MediaType: string);
 
     (**
      * Consumes defines which MIME type is consumed by this method.
      *)
-    procedure &Consumes(MediaType: string);
+    procedure &Consumes(const MediaType: string);
 
     (**
      * Indicates that the following method will answer to a HTTP GET request
@@ -189,7 +188,7 @@ begin
 end;
 
 procedure TdjRestfulComponent.SendError(AResponseInfo: TIdHTTPResponseInfo;
-  Error: Integer; ErrorMessage: string);
+  Error: Integer; const ErrorMessage: string);
 begin
   AResponseInfo.ResponseNo := Error;
 
@@ -318,17 +317,17 @@ begin
   end;
 end;
 
-procedure TdjRestfulComponent.&Produces(MediaType: string);
+procedure TdjRestfulComponent.&Produces(const MediaType: string);
 begin
   RestConfig.NextProduces := MediaType;
 end;
 
-procedure TdjRestfulComponent.&Consumes(MediaType: string);
+procedure TdjRestfulComponent.&Consumes(const MediaType: string);
 begin
   RestConfig.NextConsumes := MediaType;
 end;
 
-procedure TdjRestfulComponent.&Path(Path: string);
+procedure TdjRestfulComponent.&Path(const Path: string);
 begin
   RestConfig.SetPath(Path);
 end;
