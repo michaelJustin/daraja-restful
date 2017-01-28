@@ -50,7 +50,7 @@ type
     function GetPath: string;
     function GetHandler: TRouteProc;
   public
-    constructor Create(Path: string; Handler: TRouteProc);
+    constructor Create(const Path: string; Handler: TRouteProc);
     destructor Destroy; override;
 
     property Path: string read GetPath;
@@ -61,7 +61,7 @@ implementation
 
 { TrsRoute }
 
-constructor TrsRoute.Create(Path: string; Handler: TRouteProc);
+constructor TrsRoute.Create(const Path: string; Handler: TRouteProc);
 begin
   FPath := Path;
   FHandler := Handler;
