@@ -46,8 +46,6 @@ uses
   rsInterfaces, rsRoute, rsRouteCriteria, rsRouteMappings, TestRestful,
   testregistry, fpcunit, GuiTestRunner, consoletestrunner;
 
-{$R *.res}
-
 var
   Tests: TTestSuite;
   UseConsoleTestRunner: Boolean;
