@@ -1,20 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
-    <Version Value="9"/>
+    <Version Value="11"/>
     <PathDelim Value="\"/>
     <General>
       <SessionStorage Value="InProjectDir"/>
       <MainUnit Value="0"/>
       <Title Value="Unittests"/>
-      <UseXPManifest Value="True"/>
+      <UseAppBundle Value="False"/>
     </General>
     <i18n>
       <EnableI18N LFM="False"/>
     </i18n>
-    <VersionInfo>
-      <StringTable ProductVersion=""/>
-    </VersionInfo>
     <BuildModes Count="1">
       <Item1 Name="Default" Default="True"/>
     </BuildModes>
@@ -22,9 +19,10 @@
       <Version Value="2"/>
     </PublishOptions>
     <RunParams>
-      <local>
-        <FormatVersion Value="1"/>
-      </local>
+      <FormatVersion Value="2"/>
+      <Modes Count="1">
+        <Mode0 Name="default"/>
+      </Modes>
     </RunParams>
     <RequiredPackages Count="3">
       <Item1>
@@ -79,37 +77,26 @@
   <CompilerOptions>
     <Version Value="11"/>
     <PathDelim Value="\"/>
-    <Target>
-      <Filename Value="Unittests"/>
-    </Target>
     <SearchPaths>
-      <IncludeFiles Value="$(ProjOutDir);..\..\..\indy-10.6\Lib\Core;C:\Delphi\indy-10.6\Lib\Core\"/>
-      <OtherUnitFiles Value="..\..\..\slf4p\src\main;..\..\..\indy-10.6\Lib\Core;..\..\..\indy-10.6\Lib\Protocols;..\..\..\indy-10.6\Lib\System;C:\Delphi\indy-10.6\Lib\Core\;C:\Delphi\indy-10.6\Lib\Protocols\;C:\Delphi\indy-10.6\Lib\System\;..\..\..\daraja-framework\source;..\main"/>
+      <IncludeFiles Value="$(ProjOutDir);..\..\..\Indy10\Lib\Core"/>
+      <OtherUnitFiles Value="..\main;..\..\..\Indy10\Lib\Core;..\..\..\Indy10\Lib\Protocols;..\..\..\Indy10\Lib\System;..\..\..\daraja-framework\source"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Parsing>
       <SyntaxOptions>
         <SyntaxMode Value="Delphi"/>
-        <AllowLabel Value="False"/>
       </SyntaxOptions>
     </Parsing>
-    <CodeGeneration>
-      <Optimizations>
-        <OptimizationLevel Value="2"/>
-      </Optimizations>
-    </CodeGeneration>
     <Linking>
       <Debugging>
         <UseHeaptrc Value="True"/>
       </Debugging>
+      <Options>
+        <Win32>
+          <GraphicApplication Value="True"/>
+        </Win32>
+      </Options>
     </Linking>
-    <Other>
-      <Verbosity>
-        <ShowNotes Value="False"/>
-        <ShowHints Value="False"/>
-      </Verbosity>
-      <CustomOptions Value="-dDARAJA_LOGGING"/>
-    </Other>
   </CompilerOptions>
   <Debugging>
     <Exceptions Count="23">
