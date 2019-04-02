@@ -1,5 +1,5 @@
 # daraja-restful
-RESTful extension for the [Daraja Framework](https://github.com/michaelJustin/daraja-framework)
+RESTful extension for the [Daraja HTTP Framework](https://github.com/michaelJustin/daraja-framework)
 
 
 ## How does it work?
