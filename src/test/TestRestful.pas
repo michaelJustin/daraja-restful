@@ -60,8 +60,7 @@ type
 implementation
 
 uses
-  rsRoute, rsRouteCriteria, rsRouteMappings,
-  rsInterfaces,
+  rsRoute, rsRouteCriteria, rsRouteMappings, rsInterfaces,
   djRestfulComponent, djInterfaces, djServer, djWebAppContext,
   IdHTTP, Classes;
 
