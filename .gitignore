@@ -83,3 +83,4 @@ heaptrace.log
 
 *.res
 *.ini
+src/test/backup/
