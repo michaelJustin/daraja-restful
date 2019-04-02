@@ -1,7 +1,7 @@
 (*
 
-    Daraja Web Framework
-    Copyright (C) 2016  Michael Justin
+    Daraja HTTP Framework
+    Copyright (C) Michael Justin
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
@@ -21,7 +21,7 @@
     a commercial license. Buying such a license is mandatory as soon as you
     develop commercial activities involving the Daraja framework without
     disclosing the source code of your own applications. These activities
-    include: offering paid services to customers as an ASP, shipping Daraja 
+    include: offering paid services to customers as an ASP, shipping Daraja
     with a closed source product.
 
 *)
@@ -35,6 +35,7 @@ uses
   djWebAppContext,
   djInterfaces,
   djRestfulComponent,
+  djTypes,
   rsRoute,
   rsRouteMappings,
   rsRouteCriteria,
@@ -105,7 +106,7 @@ begin
   &Path('hello');
   &Produces('text/html');
   GET
-    (procedure(Request: TRequest; Response: TResponse)
+    (procedure(Request: TdjRequest; Response: TdjResponse)
     begin
       Response.ContentText :=
         '<html><title>Hello world</title>Hello world!</html>';
@@ -117,7 +118,7 @@ begin
   &Path('hello');
   &Produces('text/xml');
   GET
-    (procedure(Request: TRequest; Response: TResponse)
+    (procedure(Request: TdjRequest; Response: TdjResponse)
     begin
       Response.ContentText :=
         '<?xml version="1.0" ?><hello>Hello world!</hello>';
@@ -128,7 +129,7 @@ begin
   &Path('form.html');
   &Produces('text/html');
   GET
-   (procedure(Request: TRequest; Response: TResponse)
+   (procedure(Request: TdjRequest; Response: TdjResponse)
     begin
       Response.ContentText := '<html><form method="POST">'
         + '<input name="var" value="hello world"><input type="submit"></form></html>';
@@ -137,7 +138,7 @@ begin
 
   &Path('form.html');
   POST
-   (procedure(Request: TRequest; Response: TResponse)
+   (procedure(Request: TdjRequest; Response: TdjResponse)
     begin
       // store data
       Request.Session.Content.Values['Data'] :=
@@ -149,7 +150,7 @@ begin
   &Path('thankyou.html');
   &Produces('text/html');
   GET
-   (procedure(Request: TRequest; Response: TResponse)
+   (procedure(Request: TdjRequest; Response: TdjResponse)
     begin
       Response.ContentText := Format('<html>You entered: %s</html>',
         [Request.Session.Content.Values['Data']]);
@@ -160,7 +161,7 @@ begin
   &Path('params/{p1}/{p2}');
   &Produces('text/html');
   GET
-    (procedure(Request: TRequest; Response: TResponse)
+    (procedure(Request: TdjRequest; Response: TdjResponse)
     begin
       Response.ContentText :=
         Format('<html><title>Hello world</title>Hello world! ... p1="%s" p2="%s"</html>',

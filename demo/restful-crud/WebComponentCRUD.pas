@@ -48,7 +48,7 @@ type
 implementation
 
 uses
-  rsRoute, rsGlobal, CRUDModuleUnit, SysUtils;
+  rsRoute, rsGlobal, djTypes, CRUDModuleUnit, SysUtils;
 
 { TMyRestfulComponent }
 
@@ -62,7 +62,7 @@ begin
   // GET http://localhost/rest/persons
   // list all persons
   Produces('text/html');
-  GET(procedure(Request: TRequest; Response: TResponse)
+  GET(procedure(Request: TdjRequest; Response: TdjResponse)
   begin
     Response.ContentText := CRUDModule.GetPersons;
     Response.CharSet := 'UTF-8';
@@ -71,7 +71,7 @@ begin
   // POST http://localhost/rest/persons
   // add new person
   Produces('text/html');
-  POST(procedure(Request: TRequest; Response: TResponse)
+  POST(procedure(Request: TdjRequest; Response: TdjResponse)
   var
     Name: string;
     Person: TPerson;
@@ -86,7 +86,7 @@ begin
   // update person
   &Path('{id}');
   Produces('text/html');
-  PUT(procedure(Request: TRequest; Response: TResponse)
+  PUT(procedure(Request: TdjRequest; Response: TdjResponse)
   var
     ID: string;
   begin
@@ -98,7 +98,7 @@ begin
   // delete person
   &Path('{id}');
   Produces('text/html');
-  DELETE(procedure(Request: TRequest; Response: TResponse)
+  DELETE(procedure(Request: TdjRequest; Response: TdjResponse)
   var
     ID: string;
   begin
@@ -110,7 +110,7 @@ begin
   // get person information
   &Path('{id}');
   Produces('text/html');
-  GET(procedure(Request: TRequest; Response: TResponse)
+  GET(procedure(Request: TdjRequest; Response: TdjResponse)
   var
     ID: string;
   begin

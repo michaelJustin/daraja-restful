@@ -1,5 +1,5 @@
 (*
-    Daraja Framework
+    Daraja HTTP Framework
     Copyright (C) 2016 Michael Justin
 
     This program is free software: you can redistribute it and/or modify
@@ -34,7 +34,7 @@ interface
 
 uses
   {$IFDEF FPC}fpcunit,testregistry{$ELSE}TestFramework{$ENDIF},
-  rsGlobal, djTypes;
+  djTypes;
 
 type
   { TRestfulTests }
@@ -60,8 +60,7 @@ type
 implementation
 
 uses
-  rsConfiguration, rsRoute, rsRouteCriteria, rsRouteMappings,
-  rsInterfaces,
+  rsRoute, rsRouteCriteria, rsRouteMappings, rsInterfaces,
   djRestfulComponent, djInterfaces, djServer, djWebAppContext,
   IdHTTP, Classes;
 

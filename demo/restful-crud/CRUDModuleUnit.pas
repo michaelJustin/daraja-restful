@@ -1,7 +1,7 @@
 (*
 
-    Daraja Framework
-    Copyright (C) 2016  Michael Justin
+    Daraja HTTP Framework
+    Copyright (C) Michael Justin
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
@@ -111,7 +111,7 @@ begin
       '<!DOCTYPE html>'
     + '<html>'
     + '  <head>'
-    + '    <title>Daraja Framework</title>'
+    + '    <title>Daraja HTTP Framework</title>'
     + '  </head>'
     + '    <!-- jQuery --> '
     + '    <script src="//code.jquery.com/jquery.js"></script>'
