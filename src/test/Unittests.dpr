@@ -20,7 +20,7 @@
     develop commercial activities involving the software without
     disclosing the source code of your own applications. These activities
     include: offering paid services to customers as an ASP, serving resources
-    in a web application, shipping the Daraja Web Framework with a closed
+    in a web application, shipping the Daraja HTTP Framework with a closed
     source product.
 *)
 
