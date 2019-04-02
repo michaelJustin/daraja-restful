@@ -20,7 +20,7 @@
 			<Base>true</Base>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base)'!=''">
-			<DCC_UnitSearchPath>..\main;..\..\..\daraja-framework\source;..\..\..\slf4p\src\main;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+			<DCC_UnitSearchPath>..\main;..\..\..\daraja-framework\source;..\..\..\slf4p\src\main;..\..\..\Indy10\Lib\Core;..\..\..\Indy10\Lib\Protocols;..\..\..\Indy10\Lib\System;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
 			<DCC_Define>DARAJA_LOGGING;xDARAJA_RESTFUL_COMPATIBLE;$(DCC_Define)</DCC_Define>
 			<DCC_DependencyCheckOutputName>Unittests.exe</DCC_DependencyCheckOutputName>
 			<DCC_ImageBase>00400000</DCC_ImageBase>
