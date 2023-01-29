@@ -34,7 +34,7 @@ interface
 
 uses
   {$IFDEF FPC}fpcunit,testregistry{$ELSE}TestFramework{$ENDIF},
-  rsGlobal, djTypes;
+  djTypes;
 
 type
   { TRestfulTests }
@@ -60,7 +60,7 @@ type
 implementation
 
 uses
-  rsConfiguration, rsRoute, rsRouteCriteria, rsRouteMappings,
+  rsRoute, rsRouteCriteria, rsRouteMappings,
   rsInterfaces,
   djRestfulComponent, djInterfaces, djServer, djWebAppContext,
   IdHTTP, Classes;
